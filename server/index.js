@@ -4,12 +4,14 @@ const bodyParser = require("body-parser");
 const app = express();
 const server = require("http").Server(app);
 const io = require("socket.io")(server);
+const database = require("./lib/Database");
 
 const port = 3001;
 
 app.use(express.static("public"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.database = database;
 
 app.get("/", (req, res) => { // get all bets info aka homepage
     res.send("Hello World!");
