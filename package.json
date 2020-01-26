@@ -14,6 +14,7 @@
     "eslint-plugin-react-hooks": "^1.7.0"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
   }
 }
