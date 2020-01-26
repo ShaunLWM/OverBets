@@ -23,5 +23,8 @@ module.exports = {
     'react',
   ],
   rules: {
+    "quotes": 0,
+    "indent": 0,
+    "no-tabs": 0
   },
 };
