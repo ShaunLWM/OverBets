@@ -104,3 +104,4 @@ dist
 .tern-port
 server/public/img/teams
 server/public/img/players
+.env
