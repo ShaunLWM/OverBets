@@ -3,7 +3,7 @@ require("dotenv").config();
 
 class Database {
     constructor() {
-
+        this.connect();
     }
 
     async connect() {
@@ -37,7 +37,14 @@ class Database {
     }
 
     async getUser(id) {
+        const [rows] = await this.connection.query("SELECT * FROM user WHERE user_battletag = ?", id);
+        if (rows.length === 0) return false;
+        return rows[0];
+    }
 
+    async addUser(id) {
+        await this.connection.query("INSERT INTO `user` (`user_id`, `user_battletag`, `user_dateregistered`, `user_coins`) VALUES (NULL, ?, NOW(), '100');", [id]);
+        return true;
     }
 }
 

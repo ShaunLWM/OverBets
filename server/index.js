@@ -4,15 +4,17 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cookieSession = require("cookie-session");
 const passport = require("passport");
-const session = require("express-session");
+const session = require('express-session');
 const cors = require("cors");
 const cookieParser = require("cookie-parser"); // parse cookie header
 
 const app = express();
 const server = require("http").Server(app);
 const io = require("socket.io")(server);
-const passportSetup = require("./lib/Passport");
+
+require("./lib/Passport");
 const database = require("./lib/Database");
+const authRoutes = require("./routes/auth");
 
 app.use(cors({
     origin: "http://localhost:3001", // allow to server to accept request from different origin
@@ -20,20 +22,27 @@ app.use(cors({
     credentials: true, // allow session cookie from browser to pass through
 }));
 
+app.use(cookieParser());
 app.use(cookieSession({
     name: "session",
     keys: [process.env.SERVER_COOKIE_KEY],
     maxAge: 24 * 60 * 60 * 100,
 }));
 
-app.use(cookieParser());
+app.use(session({
+    secret: process.env.SERVER_SESSION_KEY,
+    saveUninitialized: true,
+    resave: true,
+}));
+
 app.use(passport.initialize());
-// deserialize cookie from the browser
 app.use(passport.session());
 app.use(express.static("public"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.database = database;
+
+app.use("/auth", authRoutes);
 
 app.get("/", (req, res) => { // get all bets info aka homepage
     res.send("Hello World!");
