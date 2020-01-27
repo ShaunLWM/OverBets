@@ -1,15 +1,23 @@
 import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch, useParams } from "react-router-dom";
 import createPersistedState from "use-persisted-state";
+const fetch = require('node-fetch');
 
 const useTokenState = createPersistedState("token");
 
 function App() {
   const [token, setToken] = useTokenState("");
 
-  useEffect(() => {
-    console.log(`Token is ${token}`)
-  }, []);
+  const checkToken = (e) => {
+    e.preventDefault();
+    if (token.length < 1) return console.log("No tokn");
+    fetch("http://localhost:3001/auth/token", {
+      headers: { 'Authorization': `Bearer ${token}` },
+    })
+      .then(res => res.json())
+      .then(data => console.log(data))
+      .catch(error => console.error(error))
+  }
   return (
     <div className="App">
       <Router>
@@ -19,12 +27,17 @@ function App() {
               <li>
                 {token.length < 1
                   ? <a href="http://localhost:3001/auth/bnet">Login</a>
-                  : <a href="#" onClick={(e) => {
+                  :
+                  <div><a href="#" onClick={(e) => {
                     e.preventDefault();
                     setToken("");
                     window.location = "http://localhost:3001/auth/logout";
-                  }}>Logout</a>}
+                  }}>Logout</a>
+
+                  </div>
+                }
               </li>
+              <li><button onClick={checkToken}>Check</button></li>
             </ul>
           </nav>
 

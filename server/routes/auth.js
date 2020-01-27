@@ -12,13 +12,7 @@ router.get("/login/success", async (req, res) => {
 });
 
 router.get("/token", isAuthenticated, async (req, res) => {
-    if (!req.user) return res.status(401).json({ success: false });
-    const user = await database.getUser(req.user.user_battletag);
-    const token = await jwt.sign({ ...user }, process.env.JWT_SECRET, { expiresIn: 36000 });
-    return res.json({
-        success: true,
-        token,
-    });
+    return res.status(200).json({ success: true });
 });
 
 router.get("/login/failed", (req, res) => res.status(401).json({
