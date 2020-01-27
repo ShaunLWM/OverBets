@@ -35,6 +35,10 @@ class Database {
     async getBets() {
 
     }
+
+    async getUser(id) {
+
+    }
 }
 
 module.exports = new Database();
