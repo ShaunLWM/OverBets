@@ -11,7 +11,7 @@ passport.deserializeUser(async (id, done) => {
     const user = await database.getUser(id);
     if (!user) return done(new Error("Failed to deserialize an user"));
     // TODO: User has to logout here.
-    return done(null, user);
+    return done(null, { ...user });
 });
 
 passport.use(new BnetStrategy({
@@ -27,5 +27,5 @@ passport.use(new BnetStrategy({
         user = await database.getUser(profile.battletag);
     }
 
-    return done(null, user);
+    return done(null, { ...user });
 }));
