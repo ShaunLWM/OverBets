@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const cookieSession = require("cookie-session");
 const passport = require("passport");
 const cors = require("cors");
-const cookieParser = require("cookie-parser"); // parse cookie header
+const cookieParser = require("cookie-parser");
 
 const app = express();
 const server = require("http").Server(app);
@@ -14,6 +14,7 @@ const io = require("socket.io")(server);
 require("./lib/Passport");
 const database = require("./lib/Database");
 const authRoutes = require("./routes/auth");
+const isAuthenticated = require("./lib/isAuthenticated");
 
 app.use(cors({
     origin: ["http://localhost:3001", "http://localhost:3000"], // allow to server to accept request from different origin
@@ -49,8 +50,10 @@ app.get("/matches/:matchId", (req, res) => { // get bet info
 
 });
 
-app.post("/matches/:matchId", (req, res) => { // user betting on match
-
+app.post("/matches/:matchId", isAuthenticated, (req, res) => { // user betting on match
+    // TODO: client side check as well
+    const { coins, uid } = req.body;
+    return res.status(200).json({ success: true });
 });
 
 io.on("connection", (socket) => {

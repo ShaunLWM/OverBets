@@ -11,10 +11,11 @@ function App() {
   const checkToken = (e) => {
     e.preventDefault();
     if (token.length < 1) return console.log("No tokn");
-    fetch("http://localhost:3001/auth/token", {
-      headers: { 'Authorization': `Bearer ${token}` },
-    })
-      .then(res => res.json())
+    fetch("http://localhost:3001/matches/25", {
+      method: "POST",
+      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ coins: 50 })
+    }).then(res => res.json())
       .then(data => console.log(data))
       .catch(error => console.error(error))
   }
