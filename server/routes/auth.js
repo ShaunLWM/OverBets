@@ -4,7 +4,14 @@ const jwt = require("jsonwebtoken");
 const database = require("../lib/Database");
 const isAuthenticated = require("../lib/isAuthenticated");
 
-router.get("/login", async (req, res) => {
+router.get("/login/success", async (req, res) => {
+    if (!req.user) return res.redirect(`http://localhost:3000/login/failed`);
+    const user = await database.getUser(req.user.user_battletag);
+    const token = await jwt.sign({ ...user }, process.env.JWT_SECRET, { expiresIn: 36000 });
+    return res.redirect(`http://localhost:3000/login/token/${token}`);
+});
+
+router.get("/token", isAuthenticated, async (req, res) => {
     if (!req.user) return res.status(401).json({ success: false });
     const user = await database.getUser(req.user.user_battletag);
     const token = await jwt.sign({ ...user }, process.env.JWT_SECRET, { expiresIn: 36000 });
@@ -14,10 +21,6 @@ router.get("/login", async (req, res) => {
     });
 });
 
-router.get("/check", isAuthenticated, (req, res) => {
-    return res.json({ success: true });
-});
-
 router.get("/login/failed", (req, res) => res.status(401).json({
     success: false,
     message: "user failed to authenticate.",
@@ -25,12 +28,12 @@ router.get("/login/failed", (req, res) => res.status(401).json({
 
 router.get("/logout", (req, res) => {
     req.logout();
-    return res.redirect("/");
+    return res.redirect("http://localhost:3000");
 });
 
 router.get("/bnet", passport.authenticate("bnet"));
 
 router.get("/bnet/callback", passport.authenticate("bnet", { failureRedirect: "/auth/login/failed" }),
-    (req, res) => res.redirect("/auth/login"));
+    (req, res) => res.redirect("/auth/login/success"));
 
 module.exports = router;
