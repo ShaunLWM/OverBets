@@ -50,10 +50,14 @@ app.get("/matches/:matchId", (req, res) => { // get bet info
 
 });
 
-app.post("/matches/:matchId", isAuthenticated, (req, res) => { // user betting on match
+app.post("/matches/:matchId", isAuthenticated, async (req, res) => { // user betting on match
     // TODO: client side check as well
-    const { coins, uid } = req.body;
-    return res.status(200).json({ success: true });
+    const mid = req.params.matchId;
+    const { coins, uid, side } = req.body;
+    const canBet = await database.checkBet({ uid, mid });
+    if (!canBet) return res.status(403).json({ success: false, msg: "You have already bet on this match." });
+    const betUid = await database.addBet({ uid, mid, coins, side });
+    return res.status(200).json({ success: true, betUid });
 });
 
 io.on("connection", (socket) => {
