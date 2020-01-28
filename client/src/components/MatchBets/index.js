@@ -2,10 +2,9 @@ import Card from "@material-ui/core/Card";
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
 import { getRandomColor } from "../../lib/Helper";
-import PlayerAvatar from "../PlayerAvatar";
+import BetsContainer from "../BetsContainer";
 
 const useStyles = makeStyles(({ spacing, palette }) => {
-    const family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol'";
     return {
         card: {
             display: "flex",
@@ -22,8 +21,9 @@ const useStyles = makeStyles(({ spacing, palette }) => {
 const KanbanCard = ({ className }) => {
     const styles = useStyles();
     const [demoPlayers, setDemoPlayers] = useState([])
+
     useEffect(() => {
-        setDemoPlayers(new Array(8).fill("").map(() => {
+        setDemoPlayers(new Array(4).fill("").map(() => {
             return {
                 img: "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/80/80683e910ec2b00eb8903009b08a755e65d94349_full.jpg",
                 coins: 100,
@@ -31,12 +31,12 @@ const KanbanCard = ({ className }) => {
             }
         }));
 
+    }, []);
 
-    }, [])
     return (
         <Card className={styles.card} elevation={0}>
             {
-                demoPlayers.map(player => <PlayerAvatar {...player} />)
+                demoPlayers.map(player => <BetsContainer {...player} />)
             }
         </Card>
     );

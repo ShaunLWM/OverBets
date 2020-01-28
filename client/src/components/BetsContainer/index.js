@@ -1,5 +1,7 @@
 import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
+import BetsAvatar from "../BetsAvatar";
+import BetsCoins from "../BetsCoins";
 
 const useStyles = makeStyles(() => ({
     avatar: {
@@ -11,15 +13,15 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-function PlayerAvatar({ img, color = "#70A1C5", coins }) {
+function BetsContainer(props) {
     const classes = useStyles();
 
     return (
         <div style={{ position: "relative", overflow: "visible", textAlign: "center", margin: "0 auto" }}>
-            <img src={img} className={classes.avatar} style={{ borderColor: color }} />
-            <span>{coins}</span>
+            <BetsAvatar {...props} />
+            <BetsCoins {...props} />
         </div>
     );
 }
 
-export default React.memo(PlayerAvatar);
+export default React.memo(BetsContainer);
