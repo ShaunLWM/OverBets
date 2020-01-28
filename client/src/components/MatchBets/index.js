@@ -1,7 +1,7 @@
 import Card from "@material-ui/core/Card";
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
-import { getRandomColor, getRandomInt } from "../../lib/Helper";
+import { getRandomAvatar, getRandomColor, getRandomInt } from "../../lib/Helper";
 import BetsContainer from "../BetsContainer";
 
 const useStyles = makeStyles(({ spacing, palette }) => {
@@ -25,7 +25,7 @@ const KanbanCard = ({ className }) => {
     useEffect(() => {
         setDemoPlayers(new Array(getRandomInt(1, 8)).fill("").map(() => {
             return {
-                img: "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/80/80683e910ec2b00eb8903009b08a755e65d94349_full.jpg",
+                img: getRandomAvatar(),
                 coins: 100,
                 color: getRandomColor()
             }
