@@ -73,7 +73,7 @@ const KanbanCard = ({ className }) => {
 
     return (
         <Card className={cx(styles.card, className)} elevation={0}>
-            <Avatar src={"/img/teams/4402.svg"} className={styles.avatar} />
+            <Avatar src={"https://liquipedia.net/commons/images/thumb/6/6c/New_York_Excelsior_logo.png/600px-New_York_Excelsior_logo.png"} className={styles.avatar} />
             <Box>
                 <h3 className={styles.heading}>Sarah Onella</h3>
                 <p className={styles.subheader}>23 y.o • Canada</p>
@@ -83,7 +83,7 @@ const KanbanCard = ({ className }) => {
                     <span className={styles.value}>3.12</span>
                 </Box>
             </Box>
-            <Avatar src={"/img/teams/4402.svg"} className={styles.avatar} />
+            <Avatar src={"https://liquipedia.net/commons/images/thumb/9/99/London_Spitfire_logo.png/600px-London_Spitfire_logo.png"} className={styles.avatar} />
         </Card>
     );
 };
