@@ -36,7 +36,6 @@ const useStyles = makeStyles(({ spacing, palette }) => {
             fontFamily: family,
             fontSize: 14,
             color: palette.grey[600],
-            letterSpacing: "1px",
             marginBottom: 4,
         },
         value: {
@@ -74,9 +73,9 @@ const KanbanCard = ({ className }) => {
     return (
         <Card className={cx(styles.card, className)} elevation={0}>
             <Avatar src={"https://liquipedia.net/commons/images/thumb/6/6c/New_York_Excelsior_logo.png/600px-New_York_Excelsior_logo.png"} className={styles.avatar} />
-            <Box>
-                <h3 className={styles.heading}>Sarah Onella</h3>
-                <p className={styles.subheader}>23 y.o • Canada</p>
+            <Box style={{ textAlign: "center" }}>
+                <h3 className={styles.heading}>New York Excelsior v.s London SpitFire</h3>
+                <p className={styles.subheader}>in about 3 hours time</p>
                 <Box display={"flex"} alignItems={"center"}>
                     <span className={styles.value}>1.12</span>
                     <Slider classes={sliderStyles} defaultValue={30} />
