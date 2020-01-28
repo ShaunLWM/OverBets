@@ -6,8 +6,8 @@ const mysql = require("mysql2/promise");
 const OverwatchLeague = require("overwatchleague.js");
 const download = require("download");
 const path = require("path");
-
 require("dotenv").config();
+
 const IMG_DEST = path.join(__dirname, "..", "public", "img");
 
 const owl = new OverwatchLeague("en_US");
@@ -36,7 +36,7 @@ const sleep = () => new Promise((resolve) => setTimeout(resolve, 1000));
     const players = (await owl.getPlayers()).data;
     for (const player of players.data) {
         const { playerId } = player;
-        console.log(playerId)
+        console.log(playerId);
         const playerData = ((await owl.getPlayer(playerId)).data).data.player;
         const playerIgn = playerData.name;
         const playerCountry = playerData.nationality.toLowerCase();

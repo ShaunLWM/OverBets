@@ -2,13 +2,18 @@ import PropTypes from "prop-types";
 import React, { createContext } from "react";
 import { useImmerReducer } from "use-immer";
 
-const initialState = {};
+const initialState = {
+    user: {}
+};
 
 const store = createContext(initialState);
 const { Provider } = store;
 
 function reducerFunction(draft, action) {
     switch (action.type) {
+        case "setUser":
+            draft["user"] = action["data"];
+            break;
         default:
             draft = initialState;
     }

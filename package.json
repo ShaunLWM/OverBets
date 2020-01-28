@@ -13,7 +13,6 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.18.0",
     "eslint-plugin-react-hooks": "^1.7.0",
-    "node-fetch": "^2.6.0",
     "overwatchleague.js": "^0.0.5"
   },
   "dependencies": {
@@ -25,6 +24,7 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.1.0",
+    "node-fetch": "^2.6.0",
     "passport": "^0.4.1",
     "passport-bnet": "^2.0.0",
     "socket.io": "^2.3.0"
