@@ -3,7 +3,32 @@ import React, { createContext } from "react";
 import { useImmerReducer } from "use-immer";
 
 const initialState = {
-    user: {}
+    user: {},
+    /*
+        user_battletag: str,
+        user_token: str
+    */
+    matches: [],
+    /*
+        {
+            match_id: int <- this is our internal database id, not owl id
+            match_datetime: int,
+            teamOne: {
+                team_id: int
+                team_fullname: str
+                team_shortname: str
+                team_color: str
+            },
+            teamTwo: {},
+            bets: [
+                {
+                    user_battletag: str,
+                    user_image: str,
+                    user_coins: int // number of coins user has bet
+                }
+            ]
+        }
+    */
 };
 
 const store = createContext(initialState);
