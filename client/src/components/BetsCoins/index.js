@@ -11,7 +11,7 @@ const useStyles = makeStyles(() => ({
 
 function BetsCoins({ coins }) {
     const classes = useStyles();
-    return (<div className={classes.betsCoins}><span>{coins}</span></div>);
+    return <div className={classes.betsCoins}><span>{coins}</span></div>;
 }
 
 export default React.memo(BetsCoins);

@@ -21,6 +21,7 @@
     "cookie-session": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
+    "eslint-plugin-flowtype": "^4.6.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.1.0",
@@ -28,5 +29,13 @@
     "passport": "^0.4.1",
     "passport-bnet": "^2.0.0",
     "socket.io": "^2.3.0"
+  },
+  "eslintConfig": {
+    "extends": "react-app",
+    "settings": {
+      "react": {
+        "version": "999.999.999"
+      }
+    }
   }
 }

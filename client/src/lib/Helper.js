@@ -15,16 +15,14 @@ const AVATAR = [
     "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/80/80683e910ec2b00eb8903009b08a755e65d94349_full.jpg",
 ];
 
-module.exports = {
-    getRandomColor() {
-        return COLORS[Math.floor(Math.random() * COLORS.length)];
-    },
-    getRandomInt(min, max) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    },
-    getRandomAvatar() {
-        return AVATAR[Math.floor(Math.random() * AVATAR.length)];
-    }
+export function getRandomColor() {
+    return COLORS[Math.floor(Math.random() * COLORS.length)];
+}
+export function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+export function getRandomAvatar() {
+    return AVATAR[Math.floor(Math.random() * AVATAR.length)];
 }

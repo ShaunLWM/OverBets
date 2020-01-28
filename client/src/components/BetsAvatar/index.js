@@ -13,10 +13,7 @@ const useStyles = makeStyles(() => ({
 
 function BetsAvatar({ img, color = "#70A1C5" }) {
     const classes = useStyles();
-    return (
-
-        <img src={img} className={classes.avatar} style={{ borderColor: color }} />
-    );
+    return <img src={img} alt="User" className={classes.avatar} style={{ borderColor: color }} />
 }
 
 export default React.memo(BetsAvatar);

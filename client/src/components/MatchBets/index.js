@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { getRandomAvatar, getRandomColor, getRandomInt } from "../../lib/Helper";
 import BetsContainer from "../BetsContainer";
 
-const useStyles = makeStyles(({ spacing, palette }) => {
+const useStyles = makeStyles(({ spacing }) => {
     return {
         card: {
             display: "flex",
@@ -18,7 +18,7 @@ const useStyles = makeStyles(({ spacing, palette }) => {
 });
 
 
-const KanbanCard = ({ className }) => {
+const MatchBets = ({ className }) => {
     const styles = useStyles();
     const [demoPlayers, setDemoPlayers] = useState([])
 
@@ -30,7 +30,6 @@ const KanbanCard = ({ className }) => {
                 color: getRandomColor()
             }
         }));
-
     }, []);
 
     return (
@@ -43,4 +42,4 @@ const KanbanCard = ({ className }) => {
 };
 
 
-export default KanbanCard;
+export default MatchBets;

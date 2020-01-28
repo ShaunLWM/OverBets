@@ -66,7 +66,7 @@ const useSliderStyles = makeStyles(() => ({
     },
 }));
 
-const KanbanCard = ({ className }) => {
+const MatchCard = ({ className }) => {
     const styles = useStyles();
     const sliderStyles = useSliderStyles();
 
@@ -87,5 +87,4 @@ const KanbanCard = ({ className }) => {
     );
 };
 
-
-export default KanbanCard;
+export default MatchCard;
