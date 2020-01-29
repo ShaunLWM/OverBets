@@ -79,7 +79,7 @@ const MatchCard = ({ match }) => {
                 <Tooltip title={match["match_datetime"]}><p className={styles.subheader}>{format(match["match_datetime"])}</p></Tooltip>
                 <Box display={"flex"} alignItems={"center"}>
                     <span className={styles.value}>1.12</span>
-                    <Slider classes={sliderStyles} defaultValue={30} />
+                    <Slider classes={sliderStyles} defaultValue={30} disabled />
                     <span className={styles.value}>3.12</span>
                 </Box>
             </Box>
