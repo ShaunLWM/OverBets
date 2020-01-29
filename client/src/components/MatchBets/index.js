@@ -21,10 +21,10 @@ const useStyles = makeStyles(({ spacing }) => {
 
 const MatchBets = ({ users = [] }) => {
     const styles = useStyles();
-    const [demoPlayers, setDemoPlayers] = useState([]);
+    const [betPlayers, setBetPlayers] = useState([]);
 
     useEffect(() => {
-        setDemoPlayers(users.map((user) => {
+        setBetPlayers(users.map((user) => {
             return {
                 name: user.user_battletag,
                 img: getRandomAvatar(),
@@ -37,9 +37,7 @@ const MatchBets = ({ users = [] }) => {
     return (
         <Card className={styles.card} elevation={0}>
             <Grid container spacing={3}>
-                {
-                    demoPlayers.map(player => <BetsContainer {...player} />)
-                }
+                {betPlayers.map(player => <BetsContainer {...player} />)}
             </Grid>
         </Card>
     );

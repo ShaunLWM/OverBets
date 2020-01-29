@@ -22,7 +22,6 @@ function MatchesContainer() {
         <Grid container>
             {
                 state["matches"].map((m, i) => {
-                    console.log(`index ${i}`);
                     return (
                         <>
                             <Grid item xs={12} sm={12} md={6} key={m["match_id"]}><MatchCard match={m} key={m["match_id"]} /></Grid>
