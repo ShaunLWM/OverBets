@@ -12,7 +12,7 @@ import MailIcon from "@material-ui/icons/Mail";
 import MenuIcon from "@material-ui/icons/Menu";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import NotificationsIcon from "@material-ui/icons/Notifications";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import useTokenState from "../../lib/useTokenState";
 import { store } from "../../store";
 
@@ -46,11 +46,15 @@ function NavigationBar() {
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
 
     const { state, dispatch } = useContext(store);
-    const [currentUser, setCurrentUser] = useState(state["user"]);
+    const [currentProfile, setCurrentProfile] = useState(state["user"]);
     const [userToken] = useTokenState("");
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+    useEffect(() => {
+        setCurrentProfile(state["user"])
+    }, [state["user"]])
 
     const handleProfileMenuOpen = event => {
         setAnchorEl(event.currentTarget);
@@ -140,7 +144,7 @@ function NavigationBar() {
                     <div className={classes.grow} />
                     <div className={classes.sectionDesktop}>
                         {
-                            (typeof currentUser["user_id"] === "undefined" || userToken.length === 0)
+                            (typeof currentProfile["user_id"] === "undefined" || userToken.length === 0)
                                 ? <Button color="inherit" onClick={() => window.location = "http://localhost:3001/auth/bnet"}>Login</Button>
                                 :
                                 <><IconButton aria-label="show 4 new mails" color="inherit">
