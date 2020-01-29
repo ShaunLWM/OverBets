@@ -46,6 +46,20 @@ app.get("/user", (req, res) => { // get user info
 
 });
 
+let matches = [];
+
+app.get("/matches", async (req, res) => {
+    if (matches.length < 1) {
+        const matchesDb = await database.getMatches();
+        matches = await Promise.all(matchesDb.map(async (match) => {
+            const users = (await database.getBets(match.match_id)).map((u) => ({ ...u }));
+            return { ...match, users };
+        }));
+    }
+
+    return res.status(200).json(matches);
+});
+
 app.get("/matches/:matchId", (req, res) => { // get bet info
 
 });
@@ -56,7 +70,9 @@ app.post("/matches/:matchId", isAuthenticated, async (req, res) => { // user bet
     const { coins, uid, side } = req.body;
     const canBet = await database.checkBet({ uid, mid });
     if (!canBet) return res.status(403).json({ success: false, msg: "You have already bet on this match." });
-    const betUid = await database.addBet({ uid, mid, coins, side });
+    const betUid = await database.addBet({
+        uid, mid, coins, side,
+    });
     return res.status(200).json({ success: true, betUid });
 });
 
