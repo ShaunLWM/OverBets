@@ -1,11 +1,11 @@
 import TextField from "@material-ui/core/TextField";
 import React from "react";
 
-export default function BetMatchForm() {
+export default function BetMatchCoin() {
     return (
         <TextField
             id="outlined-number"
-            label="Number"
+            label="Coins To Bet"
             type="number"
             InputLabelProps={{
                 shrink: true,
