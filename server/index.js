@@ -53,7 +53,11 @@ app.get("/matches", async (req, res) => {
         const matchesDb = await database.getMatches();
         matches = await Promise.all(matchesDb.map(async (match) => {
             const users = (await database.getBets(match.match_id)).map((u) => ({ ...u }));
-            return { ...match, users };
+            const teamOne = await database.getTeam(match.match_teamOneId);
+            const teamTwo = await database.getTeam(match.match_teamTwoId);
+            return {
+                ...match, teamOne, teamTwo, users,
+            };
         }));
     }
 

@@ -40,7 +40,7 @@ class Database {
     async getTeam(teamId) {
         await this.checkConnect();
         const [rows] = await this.connection.execute("SELECT * FROM team WHERE team_id = ?", [teamId]);
-        return rows;
+        return rows[0];
     }
 
     async checkBet({ uid, mid }) {
