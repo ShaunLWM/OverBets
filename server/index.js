@@ -49,19 +49,20 @@ app.get("/user", (req, res) => { // get user info
 
 let matches = [];
 
-app.get("/matches", async (req, res) => {
-    if (matches.length < 1) {
-        const matchesDb = await database.getMatches();
-        matches = await Promise.all(matchesDb.map(async (match) => {
-            const users = (await database.getBets(match.match_id)).map((u) => ({ ...u }));
-            const teamOne = await database.getTeam(match.match_teamOneId);
-            const teamTwo = await database.getTeam(match.match_teamTwoId);
-            return {
-                ...match, teamOne, teamTwo, users,
-            };
-        }));
-    }
+async function populateMatches() {
+    if (matches.length > 0) return;
+    const matchesDb = await database.getMatches();
+    matches = await Promise.all(matchesDb.map(async (match) => {
+        const users = (await database.getBets(match.match_id)).map((u) => ({ ...u }));
+        const teamOne = await database.getTeam(match.match_teamOneId);
+        const teamTwo = await database.getTeam(match.match_teamTwoId);
+        return {
+            ...match, teamOne, teamTwo, users,
+        };
+    }));
+}
 
+app.get("/matches", async (req, res) => {
     return res.status(200).json(matches);
 });
 
@@ -108,4 +109,8 @@ io.on("connection", (socket) => {
     }, 1000);
 });
 
-server.listen(process.env.SERVER_PORT, () => console.log(`Example app listening on port ${process.env.SERVER_PORT}!`));
+server.listen(process.env.SERVER_PORT, async () => {
+    console.log(`Example app listening on port ${process.env.SERVER_PORT}!`);
+    await populateMatches();
+    console.log("Done populating matches.");
+});
