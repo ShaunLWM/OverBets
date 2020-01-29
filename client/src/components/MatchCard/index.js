@@ -3,8 +3,9 @@ import Box from "@material-ui/core/Box";
 import Card from "@material-ui/core/Card";
 import Slider from "@material-ui/core/Slider";
 import { makeStyles } from "@material-ui/core/styles";
-import cx from "clsx";
+import Tooltip from '@material-ui/core/Tooltip';
 import React from "react";
+import { format } from "timeago.js";
 
 const useStyles = makeStyles(({ spacing, palette }) => {
     const family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol'";
@@ -66,16 +67,16 @@ const useSliderStyles = makeStyles(() => ({
     },
 }));
 
-const MatchCard = ({ className }) => {
+const MatchCard = ({ match }) => {
     const styles = useStyles();
     const sliderStyles = useSliderStyles();
 
     return (
-        <Card className={cx(styles.card, className)} elevation={0}>
+        <Card className={styles.card} elevation={0}>
             <Avatar src={"https://liquipedia.net/commons/images/thumb/6/6c/New_York_Excelsior_logo.png/600px-New_York_Excelsior_logo.png"} className={styles.avatar} />
             <Box style={{ textAlign: "center" }}>
-                <h3 className={styles.heading}>New York Excelsior v.s London SpitFire</h3>
-                <p className={styles.subheader}>in about 3 hours time</p>
+                <h3 className={styles.heading}>{match["teamOne"]["team_fullname"]} v.s {match["teamTwo"]["team_fullname"]}</h3>
+                <Tooltip title={match["match_datetime"]}><p className={styles.subheader}>{format(match["match_datetime"])}</p></Tooltip>
                 <Box display={"flex"} alignItems={"center"}>
                     <span className={styles.value}>1.12</span>
                     <Slider classes={sliderStyles} defaultValue={30} />

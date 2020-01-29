@@ -40,6 +40,7 @@ function reducerFunction(draft, action) {
             draft["user"] = action["data"];
             break;
         case "setMatches":
+            draft["matches"] = action["data"];
             break;
         default:
             draft = initialState;

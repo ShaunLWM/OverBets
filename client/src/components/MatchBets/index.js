@@ -1,7 +1,7 @@
 import Card from "@material-ui/core/Card";
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
-import { getRandomAvatar, getRandomColor, getRandomInt } from "../../lib/Helper";
+import { getRandomAvatar, getRandomColor } from "../../lib/Helper";
 import BetsContainer from "../BetsContainer";
 
 const useStyles = makeStyles(({ spacing }) => {
@@ -18,15 +18,17 @@ const useStyles = makeStyles(({ spacing }) => {
 });
 
 
-const MatchBets = ({ className }) => {
+const MatchBets = ({ users = [] }) => {
     const styles = useStyles();
-    const [demoPlayers, setDemoPlayers] = useState([])
+    const [demoPlayers, setDemoPlayers] = useState([]);
 
     useEffect(() => {
-        setDemoPlayers(new Array(getRandomInt(1, 8)).fill("").map(() => {
+        console.log(users)
+        setDemoPlayers(users.map((user) => {
             return {
+                name: user.user_battletag,
                 img: getRandomAvatar(),
-                coins: 100,
+                coins: user.user_coins,
                 color: getRandomColor()
             }
         }));
