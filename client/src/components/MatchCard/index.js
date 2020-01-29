@@ -88,4 +88,4 @@ const MatchCard = ({ match }) => {
     );
 };
 
-export default MatchCard;
+export default React.memo(MatchCard);
