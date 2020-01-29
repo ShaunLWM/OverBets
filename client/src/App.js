@@ -10,6 +10,22 @@ import { store } from "./store";
 
 function App() {
   const { dispatch } = useContext(store);
+  const [userToken] = useTokenState("");
+
+  useEffect(() => {
+    async function fetchProfile() {
+      const results = await fetch("http://localhost:3001/profile", {
+        method: "POST",
+        headers: { 'Authorization': `Bearer ${userToken}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
+      });
+
+      const profile = await results.json();
+      dispatch({ type: "setProfile", data: profile });
+    }
+
+    if (userToken.length > 0) fetchProfile();
+  }, []);
 
   useEffect(() => {
     socket.on("connection", () => {
@@ -47,7 +63,6 @@ function TokenHandler(props) {
       });
 
       const profile = await results.json();
-      console.log(profile);
       dispatch({ type: "setProfile", data: profile });
       props.history.push("/");
     }
