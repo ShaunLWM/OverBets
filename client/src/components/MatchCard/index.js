@@ -5,6 +5,7 @@ import Slider from "@material-ui/core/Slider";
 import { makeStyles } from "@material-ui/core/styles";
 import Tooltip from '@material-ui/core/Tooltip';
 import React from "react";
+import { Link } from "react-router-dom";
 import { format } from "timeago.js";
 
 const useStyles = makeStyles(({ spacing, palette }) => {
@@ -72,19 +73,21 @@ const MatchCard = ({ match }) => {
     const sliderStyles = useSliderStyles();
 
     return (
-        <Card className={styles.card} elevation={0}>
-            <Avatar src={`http://localhost:3001/img/teams/${match["teamOne"]["team_id"]}.png`} className={styles.avatar} />
-            <Box style={{ textAlign: "center" }}>
-                <h3 className={styles.heading}>{match["teamOne"]["team_fullname"]} v.s {match["teamTwo"]["team_fullname"]}</h3>
-                <Tooltip title={match["match_datetime"]}><p className={styles.subheader}>{format(match["match_datetime"])}</p></Tooltip>
-                <Box display={"flex"} alignItems={"center"}>
-                    <span className={styles.value}>1.12</span>
-                    <Slider classes={sliderStyles} defaultValue={30} disabled />
-                    <span className={styles.value}>3.12</span>
+        <Link to={`/matches/${match["match_id"]}`} style={{ textDecoration: 'none' }}>
+            <Card className={styles.card} elevation={0}>
+                <Avatar src={`http://localhost:3001/img/teams/${match["teamOne"]["team_id"]}.png`} className={styles.avatar} />
+                <Box style={{ textAlign: "center" }}>
+                    <h3 className={styles.heading}>{match["teamOne"]["team_fullname"]} v.s {match["teamTwo"]["team_fullname"]}</h3>
+                    <Tooltip title={match["match_datetime"]}><p className={styles.subheader}>{format(match["match_datetime"])}</p></Tooltip>
+                    <Box display={"flex"} alignItems={"center"}>
+                        <span className={styles.value}>1.12</span>
+                        <Slider classes={sliderStyles} defaultValue={30} disabled />
+                        <span className={styles.value}>3.12</span>
+                    </Box>
                 </Box>
-            </Box>
-            <Avatar src={`http://localhost:3001/img/teams/${match["teamTwo"]["team_id"]}.png`} className={styles.avatar} />
-        </Card>
+                <Avatar src={`http://localhost:3001/img/teams/${match["teamTwo"]["team_id"]}.png`} className={styles.avatar} />
+            </Card>
+        </Link>
     );
 };
 
