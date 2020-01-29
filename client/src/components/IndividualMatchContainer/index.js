@@ -1,8 +1,10 @@
+import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import fetch from "node-fetch";
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from "react-router-dom";
 import { store } from "../../store";
+import BetMatchForm from "../BetMatchForm";
 import MatchBets from "../MatchBets";
 import MatchCard from "../MatchCard";
 
@@ -26,15 +28,16 @@ function IndividualMatchContainer() {
     }, [state["matches"], matchId]);
 
     return (
-        <Grid container>
+        <Grid container justify="center">
             {typeof currentMatch["match_id"] !== "undefined"
                 &&
                 <>
                     <Grid item xs={12} sm={12} md={6} ><MatchCard match={currentMatch} key={currentMatch["match_id"]} /></Grid>
                     <Grid item xs={12} sm={12} md={6} ><MatchBets users={currentMatch["users"]} /></Grid>
+                    <Grid item xs={6}><BetMatchForm /></Grid>
+                    <Grid item xs={6}><Button variant="contained">Default</Button></Grid>
                 </>
             }
-
         </Grid>
     )
 }
