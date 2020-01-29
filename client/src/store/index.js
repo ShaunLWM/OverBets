@@ -50,6 +50,9 @@ function reducerFunction(draft, action) {
             if (users.length > 5) users.shift();
             users.push(user);
             break;
+        case "setToken":
+            draft["user"]["user_token"] = action["data"]["tokenId"];
+            break;
         default:
             draft = initialState;
     }

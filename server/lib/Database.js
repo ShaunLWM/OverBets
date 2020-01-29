@@ -60,7 +60,7 @@ class Database {
 
     async getUser(id) {
         await this.checkConnect();
-        const [rows] = await this.connection.execute("SELECT * FROM user WHERE user_battletag = ?", id);
+        const [rows] = await this.connection.execute("SELECT * FROM user WHERE user_battletag = ?", [id]);
         if (rows.length === 0) return false;
         return rows[0];
     }

@@ -1,5 +1,6 @@
 import AppBar from "@material-ui/core/AppBar";
 import Badge from "@material-ui/core/Badge";
+import Button from '@material-ui/core/Button';
 import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -11,7 +12,9 @@ import MailIcon from "@material-ui/icons/Mail";
 import MenuIcon from "@material-ui/icons/Menu";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import NotificationsIcon from "@material-ui/icons/Notifications";
-import React from "react";
+import React, { useContext, useState } from "react";
+import useTokenState from "../../lib/useTokenState";
+import { store } from "../../store";
 
 const useStyles = makeStyles(theme => ({
     grow: {
@@ -37,10 +40,14 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function NavigationBar() {
+function NavigationBar() {
     const classes = useStyles();
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+
+    const { state, dispatch } = useContext(store);
+    const [currentUser, setCurrentUser] = useState(state["user"]);
+    const [userToken] = useTokenState("");
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -128,32 +135,36 @@ export default function NavigationBar() {
                         className={classes.menuButton}
                         color="inherit"
                         aria-label="open drawer"
-                    >
-                        <MenuIcon />
-                    </IconButton>
+                    ><MenuIcon /></IconButton>
                     <Typography className={classes.title} variant="h6" noWrap>OverBets</Typography>
                     <div className={classes.grow} />
                     <div className={classes.sectionDesktop}>
-                        <IconButton aria-label="show 4 new mails" color="inherit">
-                            <Badge badgeContent={4} color="secondary">
-                                <MailIcon />
-                            </Badge>
-                        </IconButton>
-                        <IconButton aria-label="show 17 new notifications" color="inherit">
-                            <Badge badgeContent={17} color="secondary">
-                                <NotificationsIcon />
-                            </Badge>
-                        </IconButton>
-                        <IconButton
-                            edge="end"
-                            aria-label="account of current user"
-                            aria-controls={menuId}
-                            aria-haspopup="true"
-                            onClick={handleProfileMenuOpen}
-                            color="inherit"
-                        >
-                            <AccountCircle />
-                        </IconButton>
+                        {
+                            (typeof currentUser["user_id"] === "undefined" || userToken.length === 0)
+                                ? <Button color="inherit" onClick={() => window.location = "http://localhost:3001/auth/bnet"}>Login</Button>
+                                :
+                                <><IconButton aria-label="show 4 new mails" color="inherit">
+                                    <Badge badgeContent={4} color="secondary">
+                                        <MailIcon />
+                                    </Badge>
+                                </IconButton>
+                                    <IconButton aria-label="show 17 new notifications" color="inherit">
+                                        <Badge badgeContent={17} color="secondary">
+                                            <NotificationsIcon />
+                                        </Badge>
+                                    </IconButton>
+                                    <IconButton
+                                        edge="end"
+                                        aria-label="account of current user"
+                                        aria-controls={menuId}
+                                        aria-haspopup="true"
+                                        onClick={handleProfileMenuOpen}
+                                        color="inherit"
+                                    >
+                                        <AccountCircle />
+                                    </IconButton>
+                                </>
+                        }
                     </div>
                     <div className={classes.sectionMobile}>
                         <IconButton
@@ -173,3 +184,5 @@ export default function NavigationBar() {
         </div>
     );
 }
+
+export default React.memo(NavigationBar);

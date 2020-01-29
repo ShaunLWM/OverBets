@@ -1,9 +1,10 @@
 import CssBaseline from '@material-ui/core/CssBaseline';
 import React, { useContext, useEffect } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Route, useParams } from 'react-router-dom';
 import MatchesContainer from "./components/MatchesContainer";
 import NavigationBar from "./components/NavigationBar";
 import socket from "./lib/useSocket";
+import useTokenState from "./lib/useTokenState";
 import { store } from "./store";
 
 function App() {
@@ -24,10 +25,25 @@ function App() {
       <CssBaseline />
       <NavigationBar />
       <BrowserRouter>
-        <MatchesContainer />
+        <Route path="/login/token/:tokenId">
+          <TokenHandler />
+        </Route>
+        <Route exact path="/" component={MatchesContainer} />
       </BrowserRouter>
     </>
   );
+}
+
+function TokenHandler() {
+  let { tokenId } = useParams();
+  const [, setToken] = useTokenState("");
+
+  useEffect(() => {
+    setToken(tokenId);
+    window.location = "/";
+  }, []);
+
+  return <></>;
 }
 
 export default App;
