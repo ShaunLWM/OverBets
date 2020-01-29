@@ -15,7 +15,7 @@ require("./lib/Passport");
 const database = require("./lib/Database");
 const authRoutes = require("./routes/auth");
 const isAuthenticated = require("./lib/isAuthenticated");
-const { getRandomNumber } = require("./lib/Helper");
+const { getRandomNumber, getRandomAvatar } = require("./lib/Helper");
 
 app.use(cors({
     origin: ["http://localhost:3001", "http://localhost:3000"], // allow to server to accept request from different origin
@@ -93,6 +93,7 @@ io.on("connection", (socket) => {
             user: {
                 user_battletag: `RandomGuy#${getRandomNumber(1, 9999)}`,
                 user_coins: getRandomNumber(0, 9999),
+                user_image: getRandomAvatar(),
             },
         });
     }, 1000);

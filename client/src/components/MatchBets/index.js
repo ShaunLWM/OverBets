@@ -2,7 +2,7 @@ import Card from "@material-ui/core/Card";
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
-import { getRandomAvatar, getRandomColor } from "../../lib/Helper";
+import { getRandomColor } from "../../lib/Helper";
 import BetsContainer from "../BetsContainer";
 
 const useStyles = makeStyles(({ spacing }) => {
@@ -24,10 +24,9 @@ const MatchBets = ({ users = [] }) => {
 
     useEffect(() => {
         setBetPlayers(users.map((user) => {
-            console.log(user)
             return {
                 name: user.user_battletag,
-                img: getRandomAvatar(),
+                img: user.user_image,
                 coins: user.user_coins,
                 color: getRandomColor()
             }
