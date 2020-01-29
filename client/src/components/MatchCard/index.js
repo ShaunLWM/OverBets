@@ -73,7 +73,7 @@ const MatchCard = ({ match }) => {
 
     return (
         <Card className={styles.card} elevation={0}>
-            <Avatar src={"https://liquipedia.net/commons/images/thumb/6/6c/New_York_Excelsior_logo.png/600px-New_York_Excelsior_logo.png"} className={styles.avatar} />
+            <Avatar src={`http://localhost:3001/img/teams/${match["teamOne"]["team_id"]}.png`} className={styles.avatar} />
             <Box style={{ textAlign: "center" }}>
                 <h3 className={styles.heading}>{match["teamOne"]["team_fullname"]} v.s {match["teamTwo"]["team_fullname"]}</h3>
                 <Tooltip title={match["match_datetime"]}><p className={styles.subheader}>{format(match["match_datetime"])}</p></Tooltip>
@@ -83,7 +83,7 @@ const MatchCard = ({ match }) => {
                     <span className={styles.value}>3.12</span>
                 </Box>
             </Box>
-            <Avatar src={"https://liquipedia.net/commons/images/thumb/9/99/London_Spitfire_logo.png/600px-London_Spitfire_logo.png"} className={styles.avatar} />
+            <Avatar src={`http://localhost:3001/img/teams/${match["teamTwo"]["team_id"]}.png`} className={styles.avatar} />
         </Card>
     );
 };
