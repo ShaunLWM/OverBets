@@ -12,4 +12,5 @@ function BetsContainer(props) {
     );
 }
 
+BetsContainer.whyDidYouRender = true;
 export default React.memo(BetsContainer);

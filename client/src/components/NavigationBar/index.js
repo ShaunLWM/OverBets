@@ -1,7 +1,7 @@
 import AppBar from "@material-ui/core/AppBar";
 import Badge from "@material-ui/core/Badge";
-import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
+import Button from "@material-ui/core/Button";
+import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -14,7 +14,8 @@ import MenuIcon from "@material-ui/icons/Menu";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import React, { useContext, useState } from "react";
-import useDeepCompareEffect from 'use-deep-compare-effect';
+import { Link } from "react-router-dom";
+import useDeepCompareEffect from "use-deep-compare-effect";
 import useTokenState from "../../lib/useTokenState";
 import { store } from "../../store";
 
@@ -27,6 +28,7 @@ const useStyles = makeStyles(theme => ({
     },
     title: {
         display: "block",
+        color: "white"
     },
     sectionDesktop: {
         display: "none",
@@ -149,7 +151,7 @@ function NavigationBar() {
                         color="inherit"
                         aria-label="open drawer"
                     ><MenuIcon /></IconButton>
-                    <Typography className={classes.title} variant="h6" noWrap>OverBets</Typography>
+                    <Link style={{ textDecoration: "none" }} to="/"><Typography className={classes.title} variant="h6" noWrap>OverBets</Typography></Link>
                     <div className={classes.grow} />
                     <div className={classes.sectionDesktop}>
                         {
@@ -199,5 +201,4 @@ function NavigationBar() {
 }
 
 NavigationBar.whyDidYouRender = true;
-
 export default React.memo(NavigationBar);

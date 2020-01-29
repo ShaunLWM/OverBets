@@ -1,7 +1,7 @@
 import CssBaseline from '@material-ui/core/CssBaseline';
 import fetch from "node-fetch";
 import React, { useContext, useEffect } from 'react';
-import { BrowserRouter, Route, useParams } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, useParams } from 'react-router-dom';
 import IndividualMatchContainer from "./components/IndividualMatchContainer";
 import MatchesContainer from "./components/MatchesContainer";
 import NavigationBar from "./components/NavigationBar";
@@ -41,11 +41,13 @@ function App() {
   return (
     <>
       <CssBaseline />
-      <NavigationBar />
       <BrowserRouter>
-        <Route path="/matches/:matchId" component={IndividualMatchContainer} />
-        <Route path="/login/token/:tokenId" component={TokenHandler} />
-        <Route exact path="/" component={MatchesContainer} />
+        <NavigationBar />
+        <Switch>
+          <Route path="/matches/:matchId" component={IndividualMatchContainer} />
+          <Route path="/login/token/:tokenId" component={TokenHandler} />
+          <Route exact path="/" component={MatchesContainer} />
+        </Switch>
       </BrowserRouter>
     </>
   );

@@ -42,4 +42,5 @@ const MatchBets = ({ users = [] }) => {
     );
 };
 
+MatchBets.whyDidYouRender = true;
 export default MatchBets;

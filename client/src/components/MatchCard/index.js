@@ -91,4 +91,5 @@ const MatchCard = ({ match }) => {
     );
 };
 
+MatchCard.whyDidYouRender = true;
 export default React.memo(MatchCard);
