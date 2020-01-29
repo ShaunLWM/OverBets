@@ -28,8 +28,8 @@ const sleep = () => new Promise((resolve) => setTimeout(resolve, 1000));
             [team.competitor.id, team.competitor.name, team.competitor.abbreviatedName.toLowerCase(), team.competitor.primaryColor],
         );
 
-        console.log(team.competitor.icon);
-        await download(team.competitor.icon, path.join(IMG_DEST, "teams"), { filename: `${team.competitor.id}.svg` });
+        console.log(team.competitor.logo);
+        await download(team.competitor.logo, path.join(IMG_DEST, "teams"), { filename: `${team.competitor.id}.png` });
         await sleep();
     }
 
