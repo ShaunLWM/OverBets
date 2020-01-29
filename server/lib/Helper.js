@@ -11,4 +11,9 @@ module.exports = {
         const matches = /<img class="player-portrait" src="(.*?)">/g.exec(profilePageData);
         return matches !== null && matches.length > 0 ? matches[1] : "";
     },
+    getRandomNumber(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
 };

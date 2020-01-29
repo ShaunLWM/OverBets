@@ -24,7 +24,7 @@ function MatchesContainer() {
                 state["matches"].map((m, i) => {
                     return (
                         <>
-                            <Grid item xs={12} sm={12} md={6} key={m["match_id"]}><MatchCard match={m} key={m["match_id"]} /></Grid>
+                            <Grid item xs={12} sm={12} md={6} key={`${m["match_id"]}-match`}><MatchCard match={m} key={m["match_id"]} /></Grid>
                             <Grid item xs={12} sm={12} md={6} key={m["match_id"]}><MatchBets users={m["users"]} /></Grid>
                         </>
                     )

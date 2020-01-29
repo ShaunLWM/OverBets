@@ -42,6 +42,14 @@ function reducerFunction(draft, action) {
         case "setMatches":
             draft["matches"] = action["data"];
             break;
+        case "newBets":
+            const { match_id, user } = action["data"];
+            const matchIndex = draft["matches"].findIndex(match => match.match_id === match_id);
+            if (matchIndex < 0) return;
+            const users = draft["matches"][matchIndex]["users"];
+            if (users.length > 5) users.shift();
+            users.push(user);
+            break;
         default:
             draft = initialState;
     }

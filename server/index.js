@@ -15,6 +15,7 @@ require("./lib/Passport");
 const database = require("./lib/Database");
 const authRoutes = require("./routes/auth");
 const isAuthenticated = require("./lib/isAuthenticated");
+const { getRandomNumber } = require("./lib/Helper");
 
 app.use(cors({
     origin: ["http://localhost:3001", "http://localhost:3000"], // allow to server to accept request from different origin
@@ -82,6 +83,19 @@ app.post("/matches/:matchId", isAuthenticated, async (req, res) => { // user bet
 
 io.on("connection", (socket) => {
     console.log(`[+] socket connected: ${socket.id}`);
+
+    setInterval(() => {
+        if (matches.length < 1) return;
+        const randomMatch = getRandomNumber(0, matches.length - 1);
+        const { match_id } = matches[randomMatch];
+        socket.emit("match:bets:new", {
+            match_id,
+            user: {
+                user_battletag: `RandomGuy#${getRandomNumber(1, 9999)}`,
+                user_coins: getRandomNumber(0, 9999),
+            },
+        });
+    }, 1000);
 });
 
 server.listen(process.env.SERVER_PORT, () => console.log(`Example app listening on port ${process.env.SERVER_PORT}!`));
