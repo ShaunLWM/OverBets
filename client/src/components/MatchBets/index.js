@@ -42,5 +42,4 @@ const MatchBets = ({ users = [] }) => {
     );
 };
 
-
 export default MatchBets;

@@ -1,6 +1,7 @@
 import AppBar from "@material-ui/core/AppBar";
 import Badge from "@material-ui/core/Badge";
 import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
 import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -47,7 +48,7 @@ function NavigationBar() {
 
     const { state, dispatch } = useContext(store);
     const [currentProfile, setCurrentProfile] = useState(state["user"]);
-    const [userToken] = useTokenState("");
+    const [userToken, setUserToken] = useTokenState("");
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -69,6 +70,11 @@ function NavigationBar() {
         handleMobileMenuClose();
     };
 
+    const handleLogout = () => {
+        setUserToken("")
+        handleMenuClose();
+    }
+
     const handleMobileMenuOpen = event => {
         setMobileMoreAnchorEl(event.currentTarget);
     };
@@ -86,6 +92,8 @@ function NavigationBar() {
         >
             <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
             <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            <Divider />
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </Menu>
     );
 
@@ -188,5 +196,7 @@ function NavigationBar() {
         </div>
     );
 }
+
+NavigationBar.whyDidYouRender = true;
 
 export default React.memo(NavigationBar);
