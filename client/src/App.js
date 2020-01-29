@@ -1,7 +1,8 @@
-import CssBaseline from '@material-ui/core/CssBaseline';
+import CssBaseline from "@material-ui/core/CssBaseline";
 import fetch from "node-fetch";
-import React, { useContext, useEffect } from 'react';
-import { BrowserRouter, Route, Switch, useParams } from 'react-router-dom';
+import React, { useContext, useEffect } from "react";
+import { BrowserRouter, Route, Switch, useParams } from "react-router-dom";
+import FourOhFour from "./components/FourOhFour";
 import IndividualMatchContainer from "./components/IndividualMatchContainer";
 import MatchesContainer from "./components/MatchesContainer";
 import NavigationBar from "./components/NavigationBar";
@@ -17,7 +18,7 @@ function App() {
     async function fetchProfile() {
       const results = await fetch("http://localhost:3001/profile", {
         method: "POST",
-        headers: { 'Authorization': `Bearer ${userToken}`, 'Content-Type': 'application/json' },
+        headers: { "Authorization": `Bearer ${userToken}`, "Content-Type": "application/json" },
         body: JSON.stringify({})
       });
 
@@ -47,6 +48,7 @@ function App() {
           <Route path="/matches/:matchId" component={IndividualMatchContainer} />
           <Route path="/login/token/:tokenId" component={TokenHandler} />
           <Route exact path="/" component={MatchesContainer} />
+          <Route component={FourOhFour} />
         </Switch>
       </BrowserRouter>
     </>
@@ -62,7 +64,7 @@ function TokenHandler(props) {
     async function fetchProfile() {
       const results = await fetch("http://localhost:3001/profile", {
         method: "POST",
-        headers: { 'Authorization': `Bearer ${tokenId}`, 'Content-Type': 'application/json' },
+        headers: { "Authorization": `Bearer ${tokenId}`, "Content-Type": "application/json" },
         body: JSON.stringify({})
       });
 
