@@ -27,7 +27,7 @@ function App() {
     }
 
     if (userToken.length > 0) fetchProfile();
-  }, []);
+  }, [dispatch, userToken]);
 
   useEffect(() => {
     socket.on("connection", () => {
@@ -37,7 +37,7 @@ function App() {
     socket.on("match:bets:new", data => {
       dispatch({ type: "newBets", data });
     })
-  }, []);
+  }, [dispatch]);
 
   return (
     <>
@@ -75,7 +75,7 @@ function TokenHandler(props) {
 
     setToken(tokenId);
     fetchProfile()
-  }, []);
+  }, [dispatch, props.history, setToken, tokenId]);
 
   return <></>;
 }

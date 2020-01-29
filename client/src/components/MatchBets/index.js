@@ -43,4 +43,4 @@ const MatchBets = ({ users = [] }) => {
 };
 
 MatchBets.whyDidYouRender = true;
-export default MatchBets;
+export default React.memo(MatchBets);

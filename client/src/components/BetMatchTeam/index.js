@@ -3,7 +3,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import React, { useState } from "react";
 
-export default function BetMatchTeam({ teamOneName, teamTwoName }) {
+function BetMatchTeam({ teamOneName, teamTwoName }) {
     const [value, setValue] = useState('female');
 
     const handleChange = event => {
@@ -19,3 +19,6 @@ export default function BetMatchTeam({ teamOneName, teamTwoName }) {
         </>
     );
 }
+
+BetMatchTeam.whyDidYouRender = true;
+export default React.memo(BetMatchTeam);

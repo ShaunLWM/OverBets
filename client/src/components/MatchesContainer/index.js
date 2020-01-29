@@ -16,7 +16,7 @@ function MatchesContainer() {
         }
 
         fetchMatches();
-    }, []);
+    }, [dispatch]);
 
     return (
         <Grid container>
@@ -34,4 +34,5 @@ function MatchesContainer() {
     )
 }
 
-export default MatchesContainer;
+MatchesContainer.whyDidYouRender = true;
+export default React.memo(MatchesContainer);

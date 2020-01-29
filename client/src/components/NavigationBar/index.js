@@ -181,17 +181,22 @@ function NavigationBar() {
                                 </>
                         }
                     </div>
-                    <div className={classes.sectionMobile}>
-                        <IconButton
-                            aria-label="show more"
-                            aria-controls={mobileMenuId}
-                            aria-haspopup="true"
-                            onClick={handleMobileMenuOpen}
-                            color="inherit"
-                        >
-                            <MoreIcon />
-                        </IconButton>
-                    </div>
+                    {
+                        (typeof currentProfile["user_id"] === "undefined" || userToken.length === 0)
+                            ? <Button className={classes.sectionMobile} color="inherit" onClick={() => window.location = "http://localhost:3001/auth/bnet"}>Login</Button>
+                            : <div className={classes.sectionMobile}>
+                                <IconButton
+                                    aria-label="show more"
+                                    aria-controls={mobileMenuId}
+                                    aria-haspopup="true"
+                                    onClick={handleMobileMenuOpen}
+                                    color="inherit"
+                                >
+                                    <MoreIcon />
+                                </IconButton>
+                            </div>
+                    }
+
                 </Toolbar>
             </AppBar>
             {renderMobileMenu}

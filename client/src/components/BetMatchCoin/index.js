@@ -1,7 +1,7 @@
 import TextField from "@material-ui/core/TextField";
 import React from "react";
 
-export default function BetMatchCoin() {
+function BetMatchCoin() {
     return (
         <TextField
             id="outlined-number"
@@ -14,3 +14,6 @@ export default function BetMatchCoin() {
         />
     );
 }
+
+BetMatchCoin.whyDidYouRender = true;
+export default React.memo(BetMatchCoin);

@@ -46,4 +46,4 @@ function IndividualMatchContainer() {
     )
 }
 
-export default IndividualMatchContainer;
+export default React.memo(IndividualMatchContainer);
