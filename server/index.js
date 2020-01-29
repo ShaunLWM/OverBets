@@ -65,6 +65,12 @@ app.get("/matches", async (req, res) => {
     return res.status(200).json(matches);
 });
 
+app.post("/profile", isAuthenticated, async (req, res) => {
+    const { uid } = req.body;
+    const profile = await database.getProfile(uid);
+    return res.status(200).json({ success: true, profile });
+});
+
 app.get("/matches/:matchId", (req, res) => { // get bet info
 
 });

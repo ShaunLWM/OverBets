@@ -58,9 +58,9 @@ class Database {
         return uniq;
     }
 
-    async getUser(id) {
+    async getUser(tag) {
         await this.checkConnect();
-        const [rows] = await this.connection.execute("SELECT * FROM user WHERE user_battletag = ?", [id]);
+        const [rows] = await this.connection.execute("SELECT * FROM user WHERE user_battletag = ?", [tag]);
         if (rows.length === 0) return false;
         return rows[0];
     }
@@ -69,6 +69,13 @@ class Database {
         await this.checkConnect();
         await this.connection.execute("INSERT INTO `user` (`user_id`, `user_battletag`, `user_dateregistered`, `user_coins`) VALUES (NULL, ?, NOW(), '100');", [id]);
         return true;
+    }
+
+    async getProfile(id) {
+        await this.checkConnect();
+        const [rows] = await this.connection.execute("SELECT * FROM user WHERE user_id = ?", [id]);
+        if (rows.length === 0) return false;
+        return rows[0];
     }
 }
 

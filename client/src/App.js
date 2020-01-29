@@ -1,4 +1,5 @@
 import CssBaseline from '@material-ui/core/CssBaseline';
+import fetch from "node-fetch";
 import React, { useContext, useEffect } from 'react';
 import { BrowserRouter, Route, useParams } from 'react-router-dom';
 import MatchesContainer from "./components/MatchesContainer";
@@ -8,7 +9,7 @@ import useTokenState from "./lib/useTokenState";
 import { store } from "./store";
 
 function App() {
-  const { state, dispatch } = useContext(store);
+  const { dispatch } = useContext(store);
 
   useEffect(() => {
     socket.on("connection", () => {
@@ -25,22 +26,34 @@ function App() {
       <CssBaseline />
       <NavigationBar />
       <BrowserRouter>
-        <Route path="/login/token/:tokenId">
-          <TokenHandler />
-        </Route>
+        <Route path="/login/token/:tokenId" component={TokenHandler} />
         <Route exact path="/" component={MatchesContainer} />
       </BrowserRouter>
     </>
   );
 }
 
-function TokenHandler() {
+function TokenHandler(props) {
+  const { dispatch } = useContext(store);
   let { tokenId } = useParams();
   const [, setToken] = useTokenState("");
 
   useEffect(() => {
+    async function fetchProfile() {
+      const results = await fetch("http://localhost:3001/profile", {
+        method: "POST",
+        headers: { 'Authorization': `Bearer ${tokenId}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
+      });
+
+      const profile = await results.json();
+      console.log(profile);
+      dispatch({ type: "setProfile", data: profile });
+      props.history.push("/");
+    }
+
     setToken(tokenId);
-    window.location = "/";
+    fetchProfile()
   }, []);
 
   return <></>;
