@@ -72,8 +72,7 @@ app.post("/profile", isAuthenticated, async (req, res) => {
     return res.status(200).json({ success: true, profile });
 });
 
-app.get("/matches/:matchId", (req, res) => { // get bet info
-    if (matches.length < 1) return res.status(401).json({ success: false, msg: "Not loaded" });
+app.get("/matches/:matchId", (req, res) => {
     const { matchId } = req.params;
     const m = matches.find((match) => match.match_id === parseInt(matchId, 10));
     return res.status(200).json({ success: true, match: m });
