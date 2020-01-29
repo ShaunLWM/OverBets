@@ -13,7 +13,6 @@ function IndividualMatchContainer() {
 
     useEffect(() => {
         async function fetchMatch() {
-            console.log("Fetching...")
             const matches = await fetch(`http://localhost:3001/matches/${matchId}`);
             const data = await matches.json();
             if (!data.success) return console.log(data.msg);
@@ -22,11 +21,9 @@ function IndividualMatchContainer() {
 
         if (state["matches"].length < 1)
             fetchMatch();
-        else {
-            console.log("Fetching old..");
+        else
             setCurrentMatch(state["matches"].find(match => match.match_id === parseInt(matchId, 10)));
-        }
-    }, [state["matches"]]);
+    }, [state["matches"], matchId]);
 
     return (
         <Grid container>

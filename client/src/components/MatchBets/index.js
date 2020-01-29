@@ -36,7 +36,7 @@ const MatchBets = ({ users = [] }) => {
     return (
         <Card className={styles.card} elevation={0}>
             <Grid container spacing={3}>
-                {betPlayers.map(player => <BetsContainer {...player} key={player.user_battletag} />)}
+                {betPlayers.map(player => <BetsContainer key={player.user_battletag} {...player} />)}
             </Grid>
         </Card>
     );
