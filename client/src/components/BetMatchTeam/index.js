@@ -1,10 +1,12 @@
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { store } from "../../store";
 
 function BetMatchTeam({ teamOneName, teamTwoName }) {
-    const [value, setValue] = useState('female');
+    const [value, setValue] = useState("0");
+    const { state, dispatch } = useContext(store);
 
     const handleChange = event => {
         setValue(event.target.value);

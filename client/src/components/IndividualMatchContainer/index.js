@@ -37,11 +37,21 @@ function IndividualMatchContainer() {
                 <>
                     <Grid item xs={12} sm={12} md={6} ><MatchCard match={currentMatch} key={currentMatch["match_id"]} /></Grid>
                     <Grid item xs={12} sm={12} md={6} ><MatchBets users={currentMatch["users"]} /></Grid>
-                    <Grid item xs={4}><BetMatchCoin /></Grid>
-                    <Grid item xs={4}><BetMatchTeam teamOneName={currentMatch["teamOne"]["team_fullname"]} teamTwoName={currentMatch["teamTwo"]["team_fullname"]} /></Grid>
-                    <Grid item xs={4}><Button variant="contained">Default</Button></Grid>
                 </>
             }
+
+            {
+                typeof currentMatch["match_id"] !== "undefined" && typeof state["user"]["user_id"] !== "undefined"
+                    ?
+                    <>
+                        <Grid item xs={4}><BetMatchCoin /></Grid>
+                        <Grid item xs={4}><BetMatchTeam teamOneName={currentMatch["teamOne"]["team_fullname"]} teamTwoName={currentMatch["teamTwo"]["team_fullname"]} /></Grid>
+                        <Grid item xs={4}><Button variant="contained">Default</Button></Grid>
+                    </>
+                    :
+                    <h3>Please login to place bets</h3>
+            }
+
         </Grid>
     )
 }

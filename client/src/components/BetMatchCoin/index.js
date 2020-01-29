@@ -1,7 +1,10 @@
 import TextField from "@material-ui/core/TextField";
-import React from "react";
+import React, { useContext } from "react";
+import { store } from "../../store";
 
 function BetMatchCoin() {
+    const { state, dispatch } = useContext(store);
+
     return (
         <TextField
             id="outlined-number"
