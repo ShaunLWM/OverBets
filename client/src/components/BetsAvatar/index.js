@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
+import Tooltip from "@material-ui/core/Tooltip";
 import React from "react";
 
 const useStyles = makeStyles(() => ({
@@ -11,9 +12,13 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-function BetsAvatar({ img, color = "#70A1C5" }) {
+function BetsAvatar({ img, name, color = "#70A1C5" }) {
     const classes = useStyles();
-    return <img src={img} alt="User" className={classes.avatar} style={{ borderColor: color }} />
+    return (
+        <Tooltip title={name} aria-label="add">
+            <img src={img} alt="User" className={classes.avatar} style={{ borderColor: color }} />
+        </Tooltip>
+    )
 }
 
 export default React.memo(BetsAvatar);
