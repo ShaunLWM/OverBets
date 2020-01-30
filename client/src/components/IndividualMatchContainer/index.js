@@ -29,10 +29,10 @@ function IndividualMatchContainer() {
             dispatch({ type: "setMatch", data: data["match"] })
         }
 
-        if (state["matches"].length < 1 || typeof currentMatch["match_id"] === "undefined")
+        if (state["matches"].length < 1 || typeof currentMatch["match"] === "undefined")
             fetchMatch();
         else
-            setCurrentMatch(state["matches"].find(match => match.match_id === parseInt(matchId, 10)));
+            setCurrentMatch(state["matches"].find(match => match.match.match_id === Number(matchId)));
     }, [state["matches"], matchId]);
 
     const handleBetClick = () => {
@@ -40,7 +40,6 @@ function IndividualMatchContainer() {
         if (typeof userCurrentCoins === "undefined") return;
         const coins = Number(betInputAmount.current.value);
         if (isNaN(coins)) return;
-        console.log(`User betting ${coins} on Team ${betCurrentTeam}`);
         if (userCurrentCoins < coins) return;
         socket.emit("match:bet:new", { token: userToken, coins, matchId, side: betCurrentTeam })
     }
@@ -48,20 +47,20 @@ function IndividualMatchContainer() {
     const handleTeamChange = value => setBetCurrentTeam(value);
     return (
         <Grid container justify="center">
-            {typeof currentMatch["match_id"] !== "undefined"
+            {typeof currentMatch["match"] !== "undefined"
                 &&
                 <>
-                    <Grid item xs={12} sm={12} md={6} ><MatchCard match={currentMatch} key={currentMatch["match_id"]} /></Grid>
+                    <Grid item xs={12} sm={12} md={6} ><MatchCard match={currentMatch["match"]} key={currentMatch["match"]["match_id"]} /></Grid>
                     <Grid item xs={12} sm={12} md={6} ><MatchBets users={currentMatch["users"]} /></Grid>
                 </>
             }
 
             {
-                typeof currentMatch["match_id"] !== "undefined" && typeof state["user"]["user_id"] !== "undefined"
+                typeof currentMatch["match"] !== "undefined" && typeof state["user"]["user_id"] !== "undefined"
                     ?
                     <>
                         <Grid item xs={4}><BetMatchCoin ref={betInputAmount} /></Grid>
-                        <Grid item xs={4}><BetMatchTeam handleTeamChange={handleTeamChange} teamOneName={currentMatch["teamOne"]["team_fullname"]} teamTwoName={currentMatch["teamTwo"]["team_fullname"]} /></Grid>
+                        <Grid item xs={4}><BetMatchTeam handleTeamChange={handleTeamChange} teamOneName={currentMatch["match"]["teamOne"]["team_fullname"]} teamTwoName={currentMatch["match"]["teamTwo"]["team_fullname"]} /></Grid>
                         <Grid item xs={4}><Button variant="contained" onClick={handleBetClick}>Bet</Button></Grid>
                     </>
                     :

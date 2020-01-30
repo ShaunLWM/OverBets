@@ -32,7 +32,7 @@ function App() {
 
   useEffect(() => {
     socket.on("connection", () => {
-      console.log("Connected");
+      console.log("[+] socket connected");
     });
 
     socket.on("match:bet:new:end", data => {

@@ -66,11 +66,15 @@ async function populateMatches() {
 
         const teamOne = await database.getTeam(match.match_teamOneId);
         const teamTwo = await database.getTeam(match.match_teamTwoId);
+        const matchPercentage = Number(leftTeamTotal / (leftTeamTotal + rightTeamTotal) * 100);
         return {
-            ...match,
+            match: {
+                ...match,
+                match_percentage: matchPercentage,
+                teamOne: { ...teamOne, team_odds: teamOdds.payoutRatio[0], team_total: leftTeamTotal },
+                teamTwo: { ...teamTwo, team_odds: teamOdds.payoutRatio[1], team_total: rightTeamTotal },
+            },
             users,
-            teamOne: { ...teamOne, team_odds: teamOdds.payoutRatio[0], team_total: leftTeamTotal },
-            teamTwo: { ...teamTwo, team_odds: teamOdds.payoutRatio[1], team_total: rightTeamTotal },
         };
     }));
 }
@@ -85,7 +89,8 @@ app.post("/profile", isAuthenticated, async (req, res) => {
 
 app.get("/matches/:matchId", (req, res) => {
     const { matchId } = req.params;
-    const m = matches.find((match) => match.match_id === parseInt(matchId, 10));
+    const m = matches.find((match) => match.match.match_id === parseInt(matchId, 10));
+    if (typeof m === "undefined") return res.status(400).json({ success: false, msg: "Match not found" });
     return res.status(200).json({ success: true, match: m });
 });
 
@@ -138,7 +143,7 @@ io.on("connection", (socket) => {
             });
 
             if (matchData.users.length > 5) matchData.users.shift();
-            matchData.users.push({
+            return matchData.users.push({
                 user_image,
                 bet_amount: coins,
                 user_battletag: battletag,
@@ -159,7 +164,6 @@ setInterval(() => {
 server.listen(process.env.SERVER_PORT, async () => {
     console.log(`Example app listening on port ${process.env.SERVER_PORT}!`);
     await populateMatches();
-    console.log(matches)
-    process.exit(0)
+    console.log(matches);
     console.log("Done populating matches.");
 });

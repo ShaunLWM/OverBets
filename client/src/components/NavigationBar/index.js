@@ -56,8 +56,6 @@ function NavigationBar() {
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
     useEffect(() => {
-        console.log("Setting new profile")
-        console.log(state["user"]);
         setCurrentProfile(state["user"])
     }, [state["user"]])
 
