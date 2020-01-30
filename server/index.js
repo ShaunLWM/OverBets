@@ -66,13 +66,21 @@ async function populateMatches() {
 
         const teamOne = await database.getTeam(match.match_teamOneId);
         const teamTwo = await database.getTeam(match.match_teamTwoId);
-        const matchPercentage = Number(leftTeamTotal / (leftTeamTotal + rightTeamTotal) * 100);
+        const matchPercentage = Number((leftTeamTotal / (leftTeamTotal + rightTeamTotal)) * 100);
         return {
             match: {
                 ...match,
-                match_percentage: matchPercentage,
-                teamOne: { ...teamOne, team_odds: teamOdds.payoutRatio[0], team_total: leftTeamTotal },
-                teamTwo: { ...teamTwo, team_odds: teamOdds.payoutRatio[1], team_total: rightTeamTotal },
+                match_percentage: matchPercentage.toFixed(2),
+                teamOne: {
+                    ...teamOne,
+                    team_odds: teamOdds.payoutRatio[0],
+                    team_total: leftTeamTotal,
+                },
+                teamTwo: {
+                    ...teamTwo,
+                    team_odds: teamOdds.payoutRatio[1],
+                    team_total: rightTeamTotal,
+                },
             },
             users,
         };
