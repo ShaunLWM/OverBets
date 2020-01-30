@@ -22,11 +22,11 @@ function MatchesContainer() {
     return (
         <Grid container>
             {
-                state["matches"].map((m, i) => {
+                state["matches"].map((m) => {
                     return (
                         <>
                             <Grid item xs={12} sm={12} md={6} key={`${m["match_id"]}-match`}><MatchCard match={m["match"]} key={m["match_id"]} /></Grid>
-                            <Grid item xs={12} sm={12} md={6} key={m["match_id"]}><MatchBets users={m["users"]} /></Grid>
+                            <Grid item xs={12} sm={12} md={6} key={`${m["match_id"]}-bets`}><MatchBets users={m["users"]} /></Grid>
                         </>
                     )
                 })
