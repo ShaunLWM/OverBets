@@ -54,7 +54,12 @@ async function populateMatches() {
     if (matches.length > 0) return;
     const matchesDb = await database.getMatches();
     matches = await Promise.all(matchesDb.map(async (match) => {
-        const users = (await database.getBets(match.match_id)).map((u) => ({ ...u }));
+        const users = (await database.getBets(match.match_id)).map((u) => ({
+            bet_amount: u.bet_amount,
+            user_image: u.user_image,
+            user_battletag: u.user_battletag,
+        }));
+
         const teamOne = await database.getTeam(match.match_teamOneId);
         const teamTwo = await database.getTeam(match.match_teamTwoId);
         return {
@@ -86,6 +91,7 @@ app.post("/matches/:matchId", isAuthenticated, async (req, res) => { // user bet
     const betUid = await database.addBet({
         uid, mid, coins, side,
     });
+
     return res.status(200).json({ success: true, betUid });
 });
 
@@ -96,8 +102,8 @@ function emitNewBet({
         match_id: matchId,
         user: {
             user_battletag: battletag,
-            user_coins: coins,
             user_image: img,
+            bet_amount: coins,
         },
     });
 }
@@ -106,20 +112,29 @@ io.on("connection", (socket) => {
     console.log(`[+] socket connected: ${socket.id}`);
 
     socket.on("match:bet:new", ({
-        coins, token, side, matchId: mid,
+        coins, token, side, matchId,
     }) => {
         jwt.verify(token, process.env.JWT_SECRET, async (error, decoded) => {
             if (error) return console.log("Failed to decode token");
-            const { user_id: uid, user_battletag: battletag } = decoded;
+            const { user_id: uid, user_battletag: battletag, user_image } = decoded;
+            const mid = Number(matchId);
+            const matchData = matches.find((match) => match.match_id === mid);
+            if (typeof matchData === "undefined") return socket.emit("match:bet:new:end", { success: false, msg: "Match doesn't exist" });
             const hasBetted = await database.checkBet({ uid, mid });
-            if (hasBetted) return socket.emit();
-
+            if (hasBetted) return socket.emit("match:bet:new:end", { success: false, msg: "You have already bet for this game" });
             await database.addBet({
                 uid, mid, coins, side,
             });
 
             emitNewBet({
-                battletag, coins, img: getRandomAvatar(), match_id: mid,
+                battletag, coins, img: getRandomAvatar(), matchId: mid,
+            });
+
+            if (matchData.users.length > 5) matchData.users.shift();
+            matchData.users.push({
+                user_image,
+                bet_amount: coins,
+                user_battletag: battletag,
             });
         });
     });
@@ -130,7 +145,7 @@ setInterval(() => {
     const randomMatch = getRandomNumber(0, matches.length - 1);
     const { match_id: mid } = matches[randomMatch];
     emitNewBet({
-        match_id: mid, battletag: `RandomGuy#${getRandomNumber(1, 9999)}`, coins: getRandomNumber(0, 9999), img: getRandomAvatar(),
+        matchId: mid, battletag: `RandomGuy#${getRandomNumber(1, 9999)}`, coins: getRandomNumber(0, 9999), img: getRandomAvatar(),
     });
 }, 5000);
 

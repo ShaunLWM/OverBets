@@ -33,7 +33,7 @@ class Database {
 
     async getBets(matchId, count = 8) {
         await this.checkConnect();
-        const [rows] = await this.connection.execute("SELECT * FROM bet b LEFT JOIN user u ON b.bet_userId = u.user_id  WHERE b.bet_matchId = ? ORDER BY b.bet_id DESC LIMIT ?", [matchId, count]);
+        const [rows] = await this.connection.execute("SELECT * FROM bet b LEFT JOIN user u ON b.bet_userId = u.user_id WHERE b.bet_matchId = ? ORDER BY b.bet_id ASC LIMIT ?", [matchId, count]);
         return rows;
     }
 

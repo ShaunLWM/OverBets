@@ -5,7 +5,7 @@ function isAuthenticated(req, res, next) {
     const bearerToken = req.headers.authorization;
     const token = (bearerToken.replace("Bearer ", "")).trim();
     return jwt.verify(token, process.env.JWT_SECRET, (error, decoded) => {
-        if (error) return res.status(403).send({ msg: "corrupted token" });
+        if (error) return res.status(403).send({ success: false, msg: "corrupted token" });
         if (req.body) req.body.uid = decoded.user_id;
         return next();
     });

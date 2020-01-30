@@ -27,7 +27,7 @@ const MatchBets = ({ users = [] }) => {
             return {
                 name: user.user_battletag,
                 img: user.user_image,
-                coins: user.user_coins,
+                coins: user.bet_amount,
                 color: getRandomColor()
             }
         }));

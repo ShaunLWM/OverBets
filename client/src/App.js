@@ -23,6 +23,7 @@ function App() {
       });
 
       const profile = await results.json();
+      if (!profile["success"]) return;
       dispatch({ type: "setProfile", data: profile });
     }
 
@@ -35,6 +36,7 @@ function App() {
     });
 
     socket.on("match:bet:new:end", data => {
+      if (typeof data.success !== "undefined" && !data.success) return console.log(data.msg);
       dispatch({ type: "newBets", data });
     })
   }, [dispatch]);
