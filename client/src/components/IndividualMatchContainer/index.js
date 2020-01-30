@@ -1,9 +1,11 @@
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import fetch from "node-fetch";
-import React, { useContext, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { useParams } from "react-router-dom";
 import useDeepCompareEffect from 'use-deep-compare-effect';
+import socket from "../../lib/useSocket";
+import useTokenState from "../../lib/useTokenState";
 import { store } from "../../store";
 import BetMatchCoin from "../BetMatchCoin";
 import BetMatchTeam from "../BetMatchTeam";
@@ -14,6 +16,9 @@ function IndividualMatchContainer() {
     const { state, dispatch } = useContext(store);
     const { matchId } = useParams();
     const [currentMatch, setCurrentMatch] = useState({});
+    const [betCurrentTeam, setBetCurrentTeam] = useState("0");
+    const [userToken] = useTokenState("");
+    const betInputAmount = useRef();
 
     useDeepCompareEffect(() => {
         async function fetchMatch() {
@@ -30,6 +35,17 @@ function IndividualMatchContainer() {
             setCurrentMatch(state["matches"].find(match => match.match_id === parseInt(matchId, 10)));
     }, [state["matches"], matchId]);
 
+    const handleBetClick = () => {
+        const userCurrentCoins = state["user"]["user_coins"];
+        if (typeof userCurrentCoins === "undefined") return;
+        const coins = Number(betInputAmount.current.value);
+        if (isNaN(coins)) return;
+        console.log(`User betting ${coins} on Team ${betCurrentTeam}`);
+        if (userCurrentCoins < coins) return;
+        socket.emit("match:bet:new", { token: userToken, coins, matchId, side: betCurrentTeam })
+    }
+
+    const handleTeamChange = value => setBetCurrentTeam(value);
     return (
         <Grid container justify="center">
             {typeof currentMatch["match_id"] !== "undefined"
@@ -44,9 +60,9 @@ function IndividualMatchContainer() {
                 typeof currentMatch["match_id"] !== "undefined" && typeof state["user"]["user_id"] !== "undefined"
                     ?
                     <>
-                        <Grid item xs={4}><BetMatchCoin /></Grid>
-                        <Grid item xs={4}><BetMatchTeam teamOneName={currentMatch["teamOne"]["team_fullname"]} teamTwoName={currentMatch["teamTwo"]["team_fullname"]} /></Grid>
-                        <Grid item xs={4}><Button variant="contained">Default</Button></Grid>
+                        <Grid item xs={4}><BetMatchCoin ref={betInputAmount} /></Grid>
+                        <Grid item xs={4}><BetMatchTeam handleTeamChange={handleTeamChange} teamOneName={currentMatch["teamOne"]["team_fullname"]} teamTwoName={currentMatch["teamTwo"]["team_fullname"]} /></Grid>
+                        <Grid item xs={4}><Button variant="contained" onClick={handleBetClick}>Bet</Button></Grid>
                     </>
                     :
                     <h3>Please login to place bets</h3>

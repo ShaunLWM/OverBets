@@ -34,7 +34,7 @@ function App() {
       console.log("Connected");
     });
 
-    socket.on("match:bets:new", data => {
+    socket.on("match:bet:new:end", data => {
       dispatch({ type: "newBets", data });
     })
   }, [dispatch]);

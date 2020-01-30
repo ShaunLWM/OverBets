@@ -13,9 +13,8 @@ import MailIcon from "@material-ui/icons/Mail";
 import MenuIcon from "@material-ui/icons/Menu";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import NotificationsIcon from "@material-ui/icons/Notifications";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import useDeepCompareEffect from "use-deep-compare-effect";
 import useTokenState from "../../lib/useTokenState";
 import { store } from "../../store";
 
@@ -56,7 +55,7 @@ function NavigationBar() {
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-    useDeepCompareEffect(() => {
+    useEffect(() => {
         setCurrentProfile(state["user"])
     }, [state["user"]])
 

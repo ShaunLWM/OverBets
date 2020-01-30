@@ -6,6 +6,7 @@ const cookieSession = require("cookie-session");
 const passport = require("passport");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
 
 const app = express();
 const server = require("http").Server(app);
@@ -62,9 +63,7 @@ async function populateMatches() {
     }));
 }
 
-app.get("/matches", async (req, res) => {
-    return res.status(200).json(matches);
-});
+app.get("/matches", async (req, res) => res.status(200).json(matches));
 
 app.post("/profile", isAuthenticated, async (req, res) => {
     const { uid } = req.body;
@@ -90,23 +89,50 @@ app.post("/matches/:matchId", isAuthenticated, async (req, res) => { // user bet
     return res.status(200).json({ success: true, betUid });
 });
 
+function emitNewBet({
+    matchId, battletag, coins, img,
+}) {
+    io.emit("match:bet:new:end", {
+        match_id: matchId,
+        user: {
+            user_battletag: battletag,
+            user_coins: coins,
+            user_image: img,
+        },
+    });
+}
+
 io.on("connection", (socket) => {
     console.log(`[+] socket connected: ${socket.id}`);
 
-    setInterval(() => {
-        if (matches.length < 1) return;
-        const randomMatch = getRandomNumber(0, matches.length - 1);
-        const { match_id } = matches[randomMatch];
-        socket.emit("match:bets:new", {
-            match_id,
-            user: {
-                user_battletag: `RandomGuy#${getRandomNumber(1, 9999)}`,
-                user_coins: getRandomNumber(0, 9999),
-                user_image: getRandomAvatar(),
-            },
+    socket.on("match:bet:new", ({
+        coins, token, side, matchId: mid,
+    }) => {
+        jwt.verify(token, process.env.JWT_SECRET, async (error, decoded) => {
+            if (error) return console.log("Failed to decode token");
+            const { user_id: uid, user_battletag: battletag } = decoded;
+            const hasBetted = await database.checkBet({ uid, mid });
+            if (hasBetted) return socket.emit();
+
+            await database.addBet({
+                uid, mid, coins, side,
+            });
+
+            emitNewBet({
+                battletag, coins, img: getRandomAvatar(), match_id: mid,
+            });
         });
-    }, 1000);
+    });
 });
+
+setInterval(() => {
+    if (matches.length < 1) return;
+    const randomMatch = getRandomNumber(0, matches.length - 1);
+    const { match_id: mid } = matches[randomMatch];
+    emitNewBet({
+        match_id: mid, battletag: `RandomGuy#${getRandomNumber(1, 9999)}`, coins: getRandomNumber(0, 9999), img: getRandomAvatar(),
+    });
+}, 5000);
 
 server.listen(process.env.SERVER_PORT, async () => {
     console.log(`Example app listening on port ${process.env.SERVER_PORT}!`);
