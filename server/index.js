@@ -69,8 +69,8 @@ async function populateMatches() {
         return {
             ...match,
             users,
-            teamOne: { ...teamOne, team_odds: teamOdds.payoutRatio[0] },
-            teamTwo: { ...teamTwo, team_odds: teamOdds.payoutRatio[1] },
+            teamOne: { ...teamOne, team_odds: teamOdds.payoutRatio[0], team_total: leftTeamTotal },
+            teamTwo: { ...teamTwo, team_odds: teamOdds.payoutRatio[1], team_total: rightTeamTotal },
         };
     }));
 }
