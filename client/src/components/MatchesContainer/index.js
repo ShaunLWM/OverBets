@@ -22,16 +22,16 @@ function MatchesContainer() {
     return (
         <Grid container>
             {
-                state["matches"].map((m) => {
+                state["matches"].map(({ match, users }) => {
                     return (
-                        <>
-                            <Grid item xs={12} sm={12} md={6} key={`${m["match_id"]}-match`}><MatchCard match={m["match"]} key={m["match_id"]} /></Grid>
-                            <Grid item xs={12} sm={12} md={6} key={`${m["match_id"]}-bets`}><MatchBets users={m["users"]} /></Grid>
-                        </>
+                        <React.Fragment key={`${match["match_id"]}`}>
+                            <Grid item xs={12} sm={12} md={6}><MatchCard match={match} /></Grid>
+                            <Grid item xs={12} sm={12} md={6}><MatchBets users={users} /></Grid>
+                        </React.Fragment>
                     )
                 })
             }
-        </Grid>
+        </Grid >
     )
 }
 
