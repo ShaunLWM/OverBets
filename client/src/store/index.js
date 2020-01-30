@@ -55,6 +55,9 @@ function reducerFunction(draft, action) {
             const users = draft["matches"][matchIndex]["users"];
             if (users.length > 5) users.shift();
             users.push(user);
+            draft["matches"][matchIndex]["match"]["match_percentage"] = action["data"]["payout"]["percentage"];
+            draft["matches"][matchIndex]["match"]["teamOne"]["team_odds"] = action["data"]["payout"]["odds"][0];
+            draft["matches"][matchIndex]["match"]["teamTwo"]["team_odds"] = action["data"]["payout"]["odds"][1];
             break;
         case "setProfile":
             draft["user"] = action["data"]["profile"];

@@ -116,7 +116,7 @@ app.post("/matches/:matchId", isAuthenticated, async (req, res) => { // user bet
 });
 
 function emitNewBet({
-    matchId, battletag, coins, img,
+    matchId, battletag, coins, img, odds, percentage,
 }) {
     io.emit("match:bet:new:end", {
         match_id: matchId,
@@ -124,6 +124,9 @@ function emitNewBet({
             user_battletag: battletag,
             user_image: img,
             bet_amount: coins,
+        },
+        payout: {
+            odds, percentage,
         },
     });
 }
@@ -164,8 +167,24 @@ setInterval(() => {
     if (matches.length < 1) return;
     const randomMatch = getRandomNumber(0, matches.length - 1);
     const { match_id: mid } = matches[randomMatch];
+    const battletag = `RandomGuy#${getRandomNumber(1, 9999)}`;
+    const coins = getRandomNumber(0, 9999);
+    const img = getRandomAvatar();
+    const randomSides = getRandomNumber(0, 1);
+    if (randomSides === 0) matches[randomMatch].match.teamOne.team_total += coins;
+    else matches[randomMatch].match.teamTwo.team_total += coins;
+
+    const leftTeamTotal = matches[randomMatch].match.teamOne.team_total;
+    const rightTeamTotal = matches[randomMatch].match.teamTwo.team_total;
+    const teamOdds = calculateOdds([leftTeamTotal, rightTeamTotal], 0, true);
+    const matchPercentage = Number((leftTeamTotal / (leftTeamTotal + rightTeamTotal)) * 100);
     emitNewBet({
-        matchId: mid, battletag: `RandomGuy#${getRandomNumber(1, 9999)}`, coins: getRandomNumber(0, 9999), img: getRandomAvatar(),
+        battletag,
+        coins,
+        img,
+        matchId: mid,
+        odds: [teamOdds.payoutRatio[0], teamOdds.payoutRatio[1]],
+        percentage: matchPercentage,
     });
 }, 5000);
 
