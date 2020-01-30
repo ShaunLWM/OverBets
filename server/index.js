@@ -17,6 +17,7 @@ const database = require("./lib/Database");
 const authRoutes = require("./routes/auth");
 const isAuthenticated = require("./lib/isAuthenticated");
 const { getRandomNumber, getRandomAvatar } = require("./lib/Helper");
+const { calculateOdds } = require("./lib/Perimutuel");
 
 app.use(cors({
     origin: ["http://localhost:3001", "http://localhost:3000"], // allow to server to accept request from different origin
@@ -54,6 +55,9 @@ async function populateMatches() {
     if (matches.length > 0) return;
     const matchesDb = await database.getMatches();
     matches = await Promise.all(matchesDb.map(async (match) => {
+        const leftTeamTotal = await database.getSumBets(match.match_id, 0);
+        const rightTeamTotal = await database.getSumBets(match.match_id, 1);
+        const teamOdds = calculateOdds([leftTeamTotal, rightTeamTotal], 0, true);
         const users = (await database.getBets(match.match_id)).map((u) => ({
             bet_amount: u.bet_amount,
             user_image: u.user_image,
@@ -63,7 +67,10 @@ async function populateMatches() {
         const teamOne = await database.getTeam(match.match_teamOneId);
         const teamTwo = await database.getTeam(match.match_teamTwoId);
         return {
-            ...match, teamOne, teamTwo, users,
+            ...match,
+            users,
+            teamOne: { ...teamOne, team_odds: teamOdds.payoutRatio[0] },
+            teamTwo: { ...teamTwo, team_odds: teamOdds.payoutRatio[1] },
         };
     }));
 }
@@ -152,5 +159,7 @@ setInterval(() => {
 server.listen(process.env.SERVER_PORT, async () => {
     console.log(`Example app listening on port ${process.env.SERVER_PORT}!`);
     await populateMatches();
+    console.log(matches)
+    process.exit(0)
     console.log("Done populating matches.");
 });

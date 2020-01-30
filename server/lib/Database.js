@@ -22,18 +22,21 @@ class Database {
         return rows;
     }
 
-    /**
-     * Get match details from matchId
-     * Returns 2 teams, odds etc
-     */
-    async getMatch(matchId) {
-        await this.checkConnect();
-        const [rows, fields] = await this.connection.query("SELECT * FROM match WHERE match_ended = 0");
-    }
-
     async getBets(matchId, count = 8) {
         await this.checkConnect();
         const [rows] = await this.connection.query("SELECT * FROM bet b LEFT JOIN user u ON b.bet_userId = u.user_id WHERE b.bet_matchId = ? ORDER BY b.bet_id ASC LIMIT ?", [matchId, count]);
+        return rows;
+    }
+
+    async getSumBets(matchId, side) {
+        await this.checkConnect();
+        const [rows] = await this.connection.query("SELECT SUM(bet_amount) as total FROM bet WHERE bet_matchId = ? AND bet_side = ?", [matchId, side]);
+        return rows[0].total === null ? 0 : Number(rows[0].total);
+    }
+
+    async getPureBets(matchId, side) {
+        await this.checkConnect();
+        const [rows] = await this.connection.query("SELECT bet_amount FROM bet WHERE bet_matchId = ? AND bet_side = ?", [matchId, side]);
         return rows;
     }
 
@@ -53,7 +56,7 @@ class Database {
         await this.checkConnect();
         const uniq = uuid();
         await this.connection.execute(
-            "INSERT INTO `bet` (`bet_id`, `bet_uid`, `bet_userId`, `bet_datetime`, `bet_matchId`, `bet_teamSide`, `bet_amount`) VALUES (NULL,?,?, NOW(),?,?,?);",
+            "INSERT INTO `bet` (`bet_id`, `bet_uid`, `bet_userId`, `bet_datetime`, `bet_matchId`, `bet_side`, `bet_amount`) VALUES (NULL,?,?, NOW(),?,?,?);",
             [uniq, uid, mid, side, coins]);
         return uniq;
     }
@@ -76,6 +79,10 @@ class Database {
         const [rows] = await this.connection.query("SELECT * FROM user WHERE user_id = ?", [id]);
         if (rows.length === 0) return false;
         return rows[0];
+    }
+
+    async addLogs({ type, msg }) {
+        // TODO: add loggins to database
     }
 }
 
