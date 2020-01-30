@@ -70,7 +70,7 @@ async function populateMatches() {
         return {
             match: {
                 ...match,
-                match_percentage: matchPercentage.toFixed(2),
+                match_percentage: Number(Math.round(matchPercentage)),
                 teamOne: {
                     ...teamOne,
                     team_odds: teamOdds.payoutRatio[0],
