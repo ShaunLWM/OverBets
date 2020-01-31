@@ -81,6 +81,12 @@ class Database {
         return rows[0];
     }
 
+    async getUserBetsHistory(id) {
+        await this.checkConnect();
+        const [rows] = await this.connection.query("SELECT * FROM bet b LEFT JOIN matches m ON b.bet_matchId = m.match_id WHERE b.bet_userId = ?", [id]);
+        return rows;
+    }
+
     async editCoins({ uid, amount = 0, add = false }) {
         await this.checkConnect();
         this.connection.execute(`UPDATE user SET user_coins = user_coins ${add ? `+` : `-`} ? WHERE user_id = ?`, [Number(amount), uid])

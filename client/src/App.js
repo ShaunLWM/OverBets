@@ -6,6 +6,7 @@ import FourOhFour from "./components/FourOhFour";
 import IndividualMatchContainer from "./components/IndividualMatchContainer";
 import MatchesContainer from "./components/MatchesContainer";
 import NavigationBar from "./components/NavigationBar";
+import UserProfile from "./components/UserProfile";
 import socket from "./lib/useSocket";
 import useTokenState from "./lib/useTokenState";
 import { store } from "./store";
@@ -49,6 +50,7 @@ function App() {
         <Switch>
           <Route path="/matches/:matchId" component={IndividualMatchContainer} />
           <Route path="/login/token/:tokenId" component={TokenHandler} />
+          <Route exact path="/profile" component={UserProfile} />
           <Route exact path="/" component={MatchesContainer} />
           <Route component={FourOhFour} />
         </Switch>
