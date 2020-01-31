@@ -28,8 +28,7 @@ function IndividualMatchContainer() {
             setCurrentMatch(data["match"]);
             dispatch({ type: "setMatch", data: data["match"] })
         }
-
-        if (state["matches"].length < 1 || typeof currentMatch["match"] === "undefined")
+        if (state["matches"].length < 1) // TODO: What if totally no match at all?
             fetchMatch();
         else
             setCurrentMatch(state["matches"].find(match => match.match.match_id === Number(matchId)));
