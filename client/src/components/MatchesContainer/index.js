@@ -15,8 +15,7 @@ function MatchesContainer() {
             dispatch({ type: "setMatches", data });
         }
 
-        // TODO: should we refetch match again?
-        fetchMatches();
+        if (state["matches"].length < 1) fetchMatches();
     }, [dispatch]);
 
     return (
