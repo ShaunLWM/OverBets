@@ -25,6 +25,7 @@ module.exports = {
   rules: {
     "quotes": 0,
     "indent": 0,
-    "no-tabs": 0
+    "no-tabs": 0,
+    "object-curly-newline": { "consistent": true }
   },
 };

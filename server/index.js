@@ -143,13 +143,13 @@ io.on("connection", (socket) => {
             const mid = Number(matchId);
             const matchData = matches.find((match) => match.match_id === mid);
             if (typeof matchData === "undefined") return socket.emit("match:bet:new:end", { success: false, msg: "Match doesn't exist" });
+
             const hasBetted = await database.checkBet({ uid, mid });
             if (hasBetted) return socket.emit("match:bet:new:end", { success: false, msg: "You have already bet for this game" });
-            const addBet = await database.addBet({
-                uid, mid, coins, side,
-            });
 
+            const addBet = await database.addBet({ uid, mid, coins, side });
             if (!addBet) return socket.emit("match:bet:new:end", { success: false, msg: "Unable to met. Please contact admin." });
+
             emitNewBet({ battletag, coins, img: user_image, matchId: mid });
             if (matchData.users.length > 5) matchData.users.shift();
             matchData.users.push({
