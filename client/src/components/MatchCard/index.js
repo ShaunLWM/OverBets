@@ -84,7 +84,7 @@ const MatchCard = ({ match }) => {
                     <Tooltip title={match["match_datetime"]}><p className={styles.subheader}>{format(match["match_datetime"])}</p></Tooltip>
                     <Box display={"flex"} alignItems={"center"}>
                         <span className={styles.value}>{match["teamOne"]["team_odds"]}x</span>
-                        <Slider classes={sliderStyles} defaultValue={match["match_percentage"]} disabled />
+                        <Slider classes={sliderStyles} defaultValue={50} value={match["match_percentage"]} disabled />
                         <span className={styles.value}>{match["teamTwo"]["team_odds"]}x</span>
                     </Box>
                 </Box>
