@@ -59,14 +59,14 @@ function IndividualMatchContainer() {
                 typeof currentMatch["match"] !== "undefined" && typeof state["user"]["user_id"] !== "undefined"
                     ?
                     <>
-                        <Grid container xs={12} sm={12} md={6}>
+                        <Grid container item xs={12} sm={12} md={6}>
                             <Grid item xs={4} sm={4}><BetMatchCoin ref={betInputAmount} /></Grid>
                             <Grid item xs={4} sm={4}><BetMatchTeam handleTeamChange={handleTeamChange} teamOneName={currentMatch["match"]["teamOne"]["team_fullname"]} teamTwoName={currentMatch["match"]["teamTwo"]["team_fullname"]} /></Grid>
                             <Grid item xs={4} sm={4}><Button variant="contained" onClick={handleBetClick}>Bet</Button></Grid>
                         </Grid>
-                        <Grid container xs={12} sm={12} md={6}>
+                        <Grid container item xs={12} sm={12} md={6}>
                             Chat Section/Head to head
-                        </Grid>
+                            </Grid>
                     </>
                     :
                     <h3>Please login to place bets</h3>

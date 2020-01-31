@@ -26,6 +26,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => {
 });
 
 const MatchBets = ({ users = [] }) => {
+    console.log(`There are ${users.length} users`);
     const styles = useStyles();
     const [betPlayers, setBetPlayers] = useState([]);
 
