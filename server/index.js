@@ -150,7 +150,7 @@ io.on("connection", (socket) => {
             });
 
             if (!addBet) return socket.emit("match:bet:new:end", { success: false, msg: "Unable to met. Please contact admin." });
-            emitNewBet({ battletag, coins, img: getRandomAvatar(), matchId: mid });
+            emitNewBet({ battletag, coins, img: user_image, matchId: mid });
             if (matchData.users.length > 5) matchData.users.shift();
             matchData.users.push({
                 user_image,
