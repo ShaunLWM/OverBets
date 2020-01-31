@@ -141,16 +141,36 @@ io.on("connection", (socket) => {
             if (error) return console.log("Failed to decode token");
             const { user_id: uid, user_battletag: battletag, user_image } = decoded;
             const mid = Number(matchId);
+            const teamSide = Number(side);
+            const betCoins = Number(coins);
+            if (isNaN(mid) || isNaN(teamSide) || isNaN(betCoins)) return socket.emit("match:bet:new:end", { success: false, msg: "Invalid input" });
+
             const matchData = matches.find((match) => match.match.match_id === mid);
             if (typeof matchData === "undefined") return socket.emit("match:bet:new:end", { success: false, msg: "Match doesn't exist" });
 
             const hasBetted = await database.checkBet({ uid, mid });
             if (hasBetted) return socket.emit("match:bet:new:end", { success: false, msg: "You have already bet for this game" });
 
-            const addBet = await database.addBet({ uid, mid, coins, side });
+            const addBet = await database.addBet({ uid, mid, coins, side: teamSide });
             if (!addBet) return socket.emit("match:bet:new:end", { success: false, msg: "Unable to met. Please contact admin." });
 
-            emitNewBet({ battletag, coins, img: user_image, matchId: mid });
+
+            if (teamSide === 0) matchData.match.teamOne.team_total += betCoins;
+            else matchData.match.teamTwo.team_total += betCoins;
+
+            const leftTeamTotal = matchData.match.teamOne.team_total;
+            const rightTeamTotal = matchData.match.teamTwo.team_total;
+            const teamOdds = calculateOdds([leftTeamTotal, rightTeamTotal], 0, true);
+            const matchPercentage = Math.round((leftTeamTotal / (leftTeamTotal + rightTeamTotal)) * 100);
+            emitNewBet({
+                battletag,
+                img: user_image,
+                coins: betCoins,
+                matchId: mid,
+                odds: [teamOdds.payoutRatio[0], teamOdds.payoutRatio[1]],
+                percentage: matchPercentage,
+            });
+
             if (matchData.users.length > 5) matchData.users.shift();
             matchData.users.push({
                 user_image,

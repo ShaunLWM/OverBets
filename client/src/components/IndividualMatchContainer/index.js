@@ -40,7 +40,7 @@ function IndividualMatchContainer() {
         const coins = Number(betInputAmount.current.value);
         if (isNaN(coins)) return;
         if (userCurrentCoins < coins) return;
-        socket.emit("match:bet:new", { token: userToken, coins, matchId, side: betCurrentTeam })
+        socket.emit("match:bet:new", { token: userToken, coins, matchId: Number(matchId), side: Number(betCurrentTeam) })
     }
 
     const handleTeamChange = value => setBetCurrentTeam(value);
