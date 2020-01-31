@@ -1,23 +1,21 @@
 import TextField from "@material-ui/core/TextField";
-import React, { useContext } from "react";
-import { store } from "../../store";
+import React from "react";
 
-const BetMatchCoin = React.forwardRef((props, ref) => {
-    const { state, dispatch } = useContext(store);
-
+function BetMatchCoin(props) {
     return (
         <TextField
-            inputRef={ref}
             id="outlined-number"
             label="Coins To Bet"
             type="number"
             InputLabelProps={{
                 shrink: true,
             }}
+            value={props.value}
+            onChange={props.onChange}
             variant="outlined"
         />
     );
-});
+};
 
 BetMatchCoin.whyDidYouRender = true;
 export default React.memo(BetMatchCoin);
