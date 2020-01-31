@@ -55,10 +55,10 @@ class Database {
     async addBet({ uid, mid, coins, side }) {
         await this.checkConnect();
         const uniq = uuid();
-        await this.connection.execute(
+        const [rows] = await this.connection.execute(
             "INSERT INTO `bet` (`bet_id`, `bet_uid`, `bet_userId`, `bet_datetime`, `bet_matchId`, `bet_side`, `bet_amount`) VALUES (NULL,?,?, NOW(),?,?,?);",
             [uniq, uid, mid, side, coins]);
-        return uniq;
+        return rows.affectedRows === 1;
     }
 
     async getUser(tag) {

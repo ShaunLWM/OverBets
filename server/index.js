@@ -145,20 +145,20 @@ io.on("connection", (socket) => {
             if (typeof matchData === "undefined") return socket.emit("match:bet:new:end", { success: false, msg: "Match doesn't exist" });
             const hasBetted = await database.checkBet({ uid, mid });
             if (hasBetted) return socket.emit("match:bet:new:end", { success: false, msg: "You have already bet for this game" });
-            await database.addBet({
+            const addBet = await database.addBet({
                 uid, mid, coins, side,
             });
 
-            emitNewBet({
-                battletag, coins, img: getRandomAvatar(), matchId: mid,
-            });
-
+            if (!addBet) return socket.emit("match:bet:new:end", { success: false, msg: "Unable to met. Please contact admin." });
+            emitNewBet({ battletag, coins, img: getRandomAvatar(), matchId: mid });
             if (matchData.users.length > 5) matchData.users.shift();
-            return matchData.users.push({
+            matchData.users.push({
                 user_image,
                 bet_amount: coins,
                 user_battletag: battletag,
             });
+
+            return database.addLogs({ type: 3, admin: 0, data: { msg: "User bet" } });
         });
     });
 });
