@@ -126,6 +126,9 @@ function NavigationBar() {
                 </IconButton>
                 <p>Notifications</p>
             </MenuItem>
+            <MenuItem>
+                <Typography variant="small" noWrap>{currentProfile["user_coins"]}c</Typography>
+            </MenuItem>
             <MenuItem onClick={handleProfileMenuOpen}>
                 <IconButton
                     aria-label="account of current user"
@@ -157,16 +160,20 @@ function NavigationBar() {
                             (typeof currentProfile["user_id"] === "undefined" || userToken.length === 0)
                                 ? <Button color="inherit" onClick={() => window.location = "http://localhost:3001/auth/bnet"}>Login</Button>
                                 :
-                                <><IconButton aria-label="show 4 new mails" color="inherit">
-                                    <Badge badgeContent={4} color="secondary">
-                                        <MailIcon />
-                                    </Badge>
-                                </IconButton>
+                                <>
+                                    <IconButton aria-label="show 4 new mails" color="inherit">
+                                        <Badge badgeContent={4} color="secondary">
+                                            <MailIcon />
+                                        </Badge>
+                                    </IconButton>
                                     <IconButton aria-label="show 17 new notifications" color="inherit">
                                         <Badge badgeContent={17} color="secondary">
                                             <NotificationsIcon />
                                         </Badge>
                                     </IconButton>
+                                    <MenuItem>
+                                        <Typography variant="small" noWrap>{currentProfile["user_coins"]}c</Typography>
+                                    </MenuItem>
                                     <IconButton
                                         edge="end"
                                         aria-label="account of current user"
