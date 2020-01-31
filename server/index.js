@@ -177,7 +177,7 @@ setInterval(() => {
     const leftTeamTotal = matches[randomMatch].match.teamOne.team_total;
     const rightTeamTotal = matches[randomMatch].match.teamTwo.team_total;
     const teamOdds = calculateOdds([leftTeamTotal, rightTeamTotal], 0, true);
-    const matchPercentage = Number((leftTeamTotal / (leftTeamTotal + rightTeamTotal)) * 100);
+    const matchPercentage = Math.round((leftTeamTotal / (leftTeamTotal + rightTeamTotal)) * 100);
     emitNewBet({
         battletag,
         coins,
