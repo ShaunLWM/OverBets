@@ -127,7 +127,7 @@ function NavigationBar() {
                 <p>Notifications</p>
             </MenuItem>
             <MenuItem>
-                <Typography variant="small" noWrap>{currentProfile["user_coins"]}c</Typography>
+                <Typography variant="caption" noWrap>{currentProfile["user_coins"]}c</Typography>
             </MenuItem>
             <MenuItem onClick={handleProfileMenuOpen}>
                 <IconButton
@@ -172,7 +172,7 @@ function NavigationBar() {
                                         </Badge>
                                     </IconButton>
                                     <MenuItem>
-                                        <Typography variant="small" noWrap>{currentProfile["user_coins"]}c</Typography>
+                                        <Typography variant="caption" noWrap>{currentProfile["user_coins"]}c</Typography>
                                     </MenuItem>
                                     <IconButton
                                         edge="end"
