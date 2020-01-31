@@ -141,7 +141,7 @@ io.on("connection", (socket) => {
             if (error) return console.log("Failed to decode token");
             const { user_id: uid, user_battletag: battletag, user_image } = decoded;
             const mid = Number(matchId);
-            const matchData = matches.find((match) => match.match_id === mid);
+            const matchData = matches.find((match) => match.match.match_id === mid);
             if (typeof matchData === "undefined") return socket.emit("match:bet:new:end", { success: false, msg: "Match doesn't exist" });
 
             const hasBetted = await database.checkBet({ uid, mid });
