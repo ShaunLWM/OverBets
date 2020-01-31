@@ -158,6 +158,7 @@ io.on("connection", (socket) => {
                 user_battletag: battletag,
             });
 
+            database.editCoins({ uid, amount: coins });
             return database.addLogs({ type: 3, admin: 0, data: { msg: "User bet" } });
         });
     });

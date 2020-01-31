@@ -58,6 +58,8 @@ function reducerFunction(draft, action) {
             draft["matches"][matchIndex]["match"]["match_percentage"] = action["data"]["payout"]["percentage"];
             draft["matches"][matchIndex]["match"]["teamOne"]["team_odds"] = action["data"]["payout"]["odds"][0];
             draft["matches"][matchIndex]["match"]["teamTwo"]["team_odds"] = action["data"]["payout"]["odds"][1];
+            if (action["data"]["user"]["user_battletag"] === draft["user"]["user_battletag"])
+                draft["user"]["user_coins"] -= action["data"]["user"]["bet_amount"];
             break;
         case "setProfile":
             draft["user"] = action["data"]["profile"];

@@ -81,7 +81,13 @@ class Database {
         return rows[0];
     }
 
-    addLogs({ type, admin = 1, data }) {
+    async editCoins({ uid, amount = 0, add = false }) {
+        await this.checkConnect();
+        this.connection.execute(`UPDATE user SET user_coins = user_coins ${add ? `+` : `-`} ? WHERE user_id = ?`, [Number(amount), uid])
+    }
+
+    async addLogs({ type, admin = 1, data }) {
+        await this.checkConnect();
         this.connection.execute("INSERT INTO `logs` (`history_type`, `history_admin`, `history_data`) VALUES (?, ?, ?);", [type, admin, data]);
     }
 }
