@@ -81,8 +81,8 @@ class Database {
         return rows[0];
     }
 
-    async addLogs({ type, msg }) {
-        // TODO: add loggins to database
+    addLogs({ type, admin = 1, data }) {
+        this.connection.execute("INSERT INTO `logs` (`history_type`, `history_admin`, `history_data`) VALUES (?, ?, ?);", [type, admin, data]);
     }
 }
 

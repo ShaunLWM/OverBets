@@ -189,8 +189,8 @@ setInterval(() => {
 }, 1500);
 
 server.listen(process.env.SERVER_PORT, async () => {
-    console.log(`Example app listening on port ${process.env.SERVER_PORT}!`);
+    console.log(`[#] overbets listening on port ${process.env.SERVER_PORT}!`);
     await populateMatches();
     console.log(matches);
-    console.log("Done populating matches.");
+    database.addLogs({ type: 4, data: { msg: `Server started ${new Date().toUTCString()}` } });
 });
