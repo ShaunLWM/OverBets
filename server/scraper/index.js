@@ -13,16 +13,12 @@ const IMG_DEST = path.join(__dirname, "..", "public", "img");
 const owl = new OverwatchLeague("en_US");
 const sleep = () => new Promise((resolve) => setTimeout(resolve, 1000));
 (async () => {
-    // const connection = await mysql.createConnection({
-    //     host: process.env.DATABASE_HOST,
-    //     user: process.env.DATABASE_USERNAME,
-    //     password: process.env.DATABASE_PASSWORD,
-    //     database: process.env.DATABASE_DB,
-    // });
-
-    const schedule = (await owl.getSchedule()).data;
-    require("fs").writeFileSync("./schedule.json", JSON.stringify(schedule, null, 2));
-    process.exit(0); r
+    const connection = await mysql.createConnection({
+        host: process.env.DATABASE_HOST,
+        user: process.env.DATABASE_USERNAME,
+        password: process.env.DATABASE_PASSWORD,
+        database: process.env.DATABASE_DB,
+    });
 
     const teams = (await owl.getTeams()).data;
     for (const team of teams.competitors) {

@@ -70,7 +70,7 @@ class Database {
 
     async addUser(id) {
         await this.checkConnect();
-        await this.connection.execute("INSERT INTO `user` (`user_id`, `user_battletag`, `user_dateregistered`, `user_coins`) VALUES (NULL, ?, NOW(), '100');", [id]);
+        await this.connection.execute("INSERT INTO `user` (`user_id`, `user_battletag`, `user_dateregistered`, `user_coins`, `user_image`) VALUES (NULL, ?, NOW(), '100', 'https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/80/80683e910ec2b00eb8903009b08a755e65d94349_full.jpg');", [id]);
         return true;
     }
 

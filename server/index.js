@@ -166,9 +166,9 @@ io.on("connection", (socket) => {
 setInterval(() => {
     if (matches.length < 1) return;
     const randomMatch = getRandomNumber(0, matches.length - 1);
-    const { match_id: mid } = matches[randomMatch];
+    const { match: { match_id: mid } } = matches[randomMatch];
     const battletag = `RandomGuy#${getRandomNumber(1, 9999)}`;
-    const coins = getRandomNumber(0, 9999);
+    const coins = getRandomNumber(1, 100);
     const img = getRandomAvatar();
     const randomSides = getRandomNumber(0, 1);
     if (randomSides === 0) matches[randomMatch].match.teamOne.team_total += coins;
@@ -186,7 +186,7 @@ setInterval(() => {
         odds: [teamOdds.payoutRatio[0], teamOdds.payoutRatio[1]],
         percentage: matchPercentage,
     });
-}, 5000);
+}, 1500);
 
 server.listen(process.env.SERVER_PORT, async () => {
     console.log(`Example app listening on port ${process.env.SERVER_PORT}!`);
