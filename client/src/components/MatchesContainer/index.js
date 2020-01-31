@@ -15,7 +15,7 @@ function MatchesContainer() {
             dispatch({ type: "setMatches", data });
         }
 
-        if (state["matches"].length < 1) fetchMatches();
+        fetchMatches();
     }, [dispatch]);
 
     return (
