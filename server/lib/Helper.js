@@ -17,6 +17,14 @@ const AVATAR = [
 ];
 
 module.exports = {
+    async getBattleImg(username) {
+        const url = `https://playoverwatch.com/en-us/search/account-by-name/${encodeURIComponent(username)}`;
+        const searchPage = await fetch(url, {
+            headers: { "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36" },
+        });
+        // {"name":"Nexus#12303","urlName":"Nexus-12303","id":376544439,"level":317,"playerLevel":317,"isPublic":false,"platform":"pc","portrait":"0x0250000000000AE6"}
+        return (await searchPage.json())[0];
+    },
     async scrape(username) {
         const url = `https://playoverwatch.com/en-us/career/pc/${username.replace("#", "-")}`;
         const profilePage = await fetch(url, {

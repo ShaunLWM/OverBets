@@ -1,6 +1,7 @@
 const passport = require("passport");
 const BnetStrategy = require("passport-bnet").Strategy;
 const database = require("./Database");
+const { getBattleImg } = require("./Helper");
 
 // serialize the user.id to save in the cookie session
 // so the browser will remember the user when login
@@ -23,7 +24,8 @@ passport.use(new BnetStrategy({
 }, async (accessToken, refreshToken, profile, done) => {
     let user = await database.getUser(profile.battletag);
     if (!user) {
-        await database.addUser(profile.battletag);
+        const img = await getBattleImg(profile.battletag).portrait || "0x02500000000002F9";
+        await database.addUser({ tag: profile.battletag, img });
         user = await database.getUser(profile.battletag);
     }
 
