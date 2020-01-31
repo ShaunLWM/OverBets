@@ -22,9 +22,9 @@ class Database {
         return rows;
     }
 
-    async getBets(matchId, count = 8) {
+    async getBets(matchId, count = 6) {
         await this.checkConnect();
-        const [rows] = await this.connection.query("SELECT * FROM bet b LEFT JOIN user u ON b.bet_userId = u.user_id WHERE b.bet_matchId = ? ORDER BY b.bet_id ASC LIMIT ?", [matchId, count]);
+        const [rows] = await this.connection.query("SELECT * FROM bet b LEFT JOIN user u ON b.bet_userId = u.user_id WHERE b.bet_matchId = ? ORDER BY b.bet_id DESC LIMIT ?", [matchId, count]);
         return rows;
     }
 

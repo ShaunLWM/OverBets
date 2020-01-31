@@ -58,7 +58,7 @@ async function populateMatches() {
         const leftTeamTotal = await database.getSumBets(match.match_id, 0);
         const rightTeamTotal = await database.getSumBets(match.match_id, 1);
         const teamOdds = calculateOdds([leftTeamTotal, rightTeamTotal], 0, true);
-        const users = (await database.getBets(match.match_id)).map((u) => ({
+        const users = (await database.getBets(match.match_id)).reverse().map((u) => ({
             bet_amount: u.bet_amount,
             user_image: u.user_image,
             user_battletag: u.user_battletag,
