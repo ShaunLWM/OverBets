@@ -3,7 +3,7 @@ import Box from "@material-ui/core/Box";
 import Card from "@material-ui/core/Card";
 import Slider from "@material-ui/core/Slider";
 import { makeStyles } from "@material-ui/core/styles";
-import Tooltip from '@material-ui/core/Tooltip';
+import Tooltip from "@material-ui/core/Tooltip";
 import React from "react";
 import { Link } from "react-router-dom";
 import { format } from "timeago.js";
@@ -47,7 +47,7 @@ const useStyles = makeStyles(({ spacing, palette }) => {
             color: palette.grey[500],
         },
         emptyLink: {
-            textDecoration: 'none'
+            textDecoration: "none"
         },
     };
 });

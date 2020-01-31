@@ -1,6 +1,6 @@
-import Grid from '@material-ui/core/Grid';
+import Grid from "@material-ui/core/Grid";
 import fetch from "node-fetch";
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from "react";
 import { store } from "../../store";
 import MatchBets from "../MatchBets";
 import MatchCard from "../MatchCard";

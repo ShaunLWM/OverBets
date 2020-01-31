@@ -1,9 +1,9 @@
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
 import fetch from "node-fetch";
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import useDeepCompareEffect from 'use-deep-compare-effect';
+import useDeepCompareEffect from "use-deep-compare-effect";
 import socket from "../../lib/useSocket";
 import useTokenState from "../../lib/useTokenState";
 import { store } from "../../store";
