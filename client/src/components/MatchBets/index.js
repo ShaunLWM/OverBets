@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { getRandomColor } from "../../lib/Helper";
 import BetsContainer from "../BetsContainer";
 
-const useStyles = makeStyles(({ spacing }) => {
+const useStyles = makeStyles(({ spacing, breakpoints }) => {
     return {
         card: {
             display: "flex",
@@ -14,6 +14,13 @@ const useStyles = makeStyles(({ spacing }) => {
             minWidth: 288,
             borderRadius: 12,
             boxShadow: "0 2px 4px 0 rgba(138, 148, 159, 0.2)",
+        },
+        subcard: {
+            [breakpoints.down("xs")]: {
+                "& > *:nth-child(n+4)": {
+                    display: "none",
+                },
+            },
         }
     };
 });
@@ -35,7 +42,7 @@ const MatchBets = ({ users = [] }) => {
 
     return (
         <Card className={styles.card} elevation={0}>
-            <Grid container spacing={3}>
+            <Grid container spacing={3} className={styles.subcard}>
                 {betPlayers.map(player => <BetsContainer key={player.name} {...player} />)}
             </Grid>
         </Card>
