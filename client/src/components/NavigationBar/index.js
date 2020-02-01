@@ -14,7 +14,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import React, { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import useTokenState from "../../lib/useTokenState";
 import { store } from "../../store";
 
@@ -45,6 +45,7 @@ const useStyles = makeStyles(theme => ({
 
 function NavigationBar() {
     const classes = useStyles();
+    const history = useHistory();
     const [anchorEl, setAnchorEl] = useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
 
@@ -67,9 +68,10 @@ function NavigationBar() {
         setMobileMoreAnchorEl(null);
     };
 
-    const handleMenuClose = () => {
+    const handleMenuClose = (loc = "") => {
         setAnchorEl(null);
         handleMobileMenuClose();
+        if (loc.length > 0) history.push(loc);
     };
 
     const handleLogout = () => {
@@ -92,7 +94,7 @@ function NavigationBar() {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+            <MenuItem onClick={() => handleMenuClose("/me")}>Profile</MenuItem>
             <MenuItem onClick={handleMenuClose}>My account</MenuItem>
             <Divider />
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
