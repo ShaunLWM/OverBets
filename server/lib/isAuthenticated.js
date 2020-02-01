@@ -11,7 +11,7 @@ function isAuthenticated(req, res, next) {
                 req.body.uid = decoded.user_id;
                 break;
             case "GET":
-                req.user = { token };
+                req.user = { uid: decoded.user_id };
                 break;
         }
 

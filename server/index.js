@@ -89,8 +89,8 @@ async function populateMatches() {
 
 app.get("/matches", async (req, res) => res.status(200).json(matches));
 
-app.post("/profile", isAuthenticated, async (req, res) => {
-    const { uid } = req.body;
+app.get("/profile", isAuthenticated, async (req, res) => {
+    const { uid } = req.user;
     const profile = await database.getProfile(uid);
     return res.status(200).json({ success: true, profile });
 });

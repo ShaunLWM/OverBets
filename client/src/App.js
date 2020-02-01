@@ -18,9 +18,7 @@ function App() {
   useEffect(() => {
     async function fetchProfile() {
       const results = await fetch("http://localhost:3001/profile", {
-        method: "POST",
         headers: { "Authorization": `Bearer ${userToken}`, "Content-Type": "application/json" },
-        body: JSON.stringify({})
       });
 
       const profile = await results.json();
