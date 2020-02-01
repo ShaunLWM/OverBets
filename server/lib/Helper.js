@@ -23,17 +23,8 @@ module.exports = {
             headers: { "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36" },
         });
         // {"name":"Nexus#12303","urlName":"Nexus-12303","id":376544439,"level":317,"playerLevel":317,"isPublic":false,"platform":"pc","portrait":"0x0250000000000AE6"}
-        return (await searchPage.json())[0];
-    },
-    async scrape(username) {
-        const url = `https://playoverwatch.com/en-us/career/pc/${username.replace("#", "-")}`;
-        const profilePage = await fetch(url, {
-            headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36" },
-        });
-
-        const profilePageData = await profilePage.text();
-        const matches = /<img class="player-portrait" src="(.*?)">/g.exec(profilePageData);
-        return matches !== null && matches.length > 0 ? matches[1] : "";
+        const results = await searchPage.json();
+        return typeof results !== "undefined" && results !== null && results.length > 0 ? results[0] : null;
     },
     getRandomNumber(min, max) {
         min = Math.ceil(min);

@@ -19,7 +19,6 @@ passport.use(new BnetStrategy({
     clientID: process.env.BLIZZARD_AUTH_CLIENT,
     clientSecret: process.env.BLIZZARD_AUTH_SECRET,
     callbackURL: "/auth/bnet/callback",
-    region: "us",
     scope: "openid",
 }, async (accessToken, refreshToken, profile, done) => {
     let user = await database.getUser(profile.battletag);
