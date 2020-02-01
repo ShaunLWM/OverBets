@@ -65,9 +65,7 @@ function TokenHandler(props) {
   useEffect(() => {
     async function fetchProfile() {
       const results = await fetch("http://localhost:3001/profile", {
-        method: "POST",
         headers: { "Authorization": `Bearer ${tokenId}`, "Content-Type": "application/json" },
-        body: JSON.stringify({})
       });
 
       const profile = await results.json();
