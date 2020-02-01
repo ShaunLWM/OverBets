@@ -16,10 +16,16 @@ class Database {
         if (typeof this.connection === "undefined") await this.connect();
     }
 
-    async getMatches(ended = 0) {
+    async getMatches(status = "MATCH_OPEN") {
         await this.checkConnect();
-        const [rows] = await this.connection.query("SELECT UNIX_TIMESTAMP(m.match_datetime) AS match_unix, m.* FROM matches m WHERE m.match_ended = ? ORDER BY m.match_id ASC", [ended]);
+        const [rows] = await this.connection.query("SELECT UNIX_TIMESTAMP(m.match_datetime) AS match_unix, m.* FROM matches m WHERE m.match_status = ? ORDER BY m.match_id ASC", [status]);
         return rows;
+    }
+
+    async updateMatchStatus(mid, status = null) {
+        if (status === null) return;
+        await this.checkConnect();
+        await this.connection.execute("UPDATE matches SET match_status = ? WHERE match_id = ?", [status, mid]);
     }
 
     async getBets(matchId, count = 6) {
