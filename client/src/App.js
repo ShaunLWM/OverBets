@@ -48,7 +48,8 @@ function App() {
         <Switch>
           <Route path="/matches/:matchId" component={IndividualMatchContainer} />
           <Route path="/login/token/:tokenId" component={TokenHandler} />
-          <Route exact path="/profile" component={UserProfile} />
+          <Route exact path="/me" component={UserProfile} />
+          <Route exact path="/profile/:tag" component={UserProfile} />
           <Route exact path="/" component={MatchesContainer} />
           <Route component={FourOhFour} />
         </Switch>

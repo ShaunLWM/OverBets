@@ -74,17 +74,16 @@ class Database {
         return true;
     }
 
+    async getUserBetsHistory(tag) {
+        await this.checkConnect();
+        const [rows] = await this.connection.execute("SELECT b.* FROM bet b INNER JOIN matches m ON b.bet_matchId = m.match_id INNER JOIN user u ON b.bet_userId = u.user_id WHERE u.user_battletag = ? ORDER BY b.bet_id DESC", [tag]);
+        return rows;
+    }
+
     async getProfile(id) {
         await this.checkConnect();
         const [rows] = await this.connection.query("SELECT * FROM user WHERE user_id = ?", [id]);
-        if (rows.length === 0) return false;
-        return rows[0];
-    }
-
-    async getUserBetsHistory(id) {
-        await this.checkConnect();
-        const [rows] = await this.connection.query("SELECT * FROM bet b LEFT JOIN matches m ON b.bet_matchId = m.match_id WHERE b.bet_userId = ?", [id]);
-        return rows;
+        return rows.length === 0 ? false : rows[0];
     }
 
     async editCoins({ uid, amount = 0, add = false }) {

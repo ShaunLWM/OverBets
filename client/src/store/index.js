@@ -74,7 +74,9 @@ const StateProvider = ({ children }) => {
     return <Provider value={{ state, dispatch }}>{children}</Provider>;
 };
 
-export { store, StateProvider };
+const BASE_URL = "http://localhost:3001";
+
+export { store, StateProvider, BASE_URL };
 
 StateProvider.propTypes = {
     children: PropTypes.element,

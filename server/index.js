@@ -87,13 +87,19 @@ async function populateMatches() {
     }));
 }
 
-app.get("/matches", async (req, res) => res.status(200).json(matches));
-
 app.get("/profile", isAuthenticated, async (req, res) => {
     const { uid } = req.user;
     const profile = await database.getProfile(uid);
     return res.status(200).json({ success: true, profile });
 });
+
+app.get("/me/:tag", async (req, res) => {
+    const tag = decodeURIComponent(req.params.tag);
+    const history = await database.getUserBetsHistory(tag);
+    return res.status(200).json({ success: true, history });
+});
+
+app.get("/matches", async (req, res) => res.status(200).json(matches));
 
 app.get("/matches/:matchId", (req, res) => {
     const { matchId } = req.params;
