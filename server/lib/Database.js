@@ -18,7 +18,7 @@ class Database {
 
     async getMatches(ended = 0) {
         await this.checkConnect();
-        const [rows] = await this.connection.query("SELECT * FROM matches m WHERE m.match_ended = ? ORDER BY UNIX_TIMESTAMP(m.match_id) ASC", [ended]);
+        const [rows] = await this.connection.query("SELECT UNIX_TIMESTAMP(m.match_datetime) AS match_unix, m.* FROM matches m WHERE m.match_ended = ? ORDER BY m.match_id ASC", [ended]);
         return rows;
     }
 

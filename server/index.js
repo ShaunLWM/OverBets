@@ -114,6 +114,14 @@ app.post("/matches/:matchId", isAuthenticated, async (req, res) => { // user bet
     const { coins, uid, side } = req.body;
     const canBet = await database.checkBet({ uid, mid });
     if (!canBet) return res.status(403).json({ success: false, msg: "You have already bet on this match." });
+    const match = matches.find((m) => m.match.match_id === mid);
+    if (typeof match === "undefined") return;
+    const matchTime = match.match.match_unix;
+    const currentTime = Math.round(Date.now() / 1000);
+    if ((currentTime + 5 * 60) >= matchTime) {
+        return res.status(403).json({ success: false, msg: "Betting is  closed for this match." });
+    }
+
     const betUid = await database.addBet({
         uid, mid, coins, side,
     });
