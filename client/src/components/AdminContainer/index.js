@@ -14,6 +14,8 @@ import TableRow from '@material-ui/core/TableRow';
 import fetch from "node-fetch";
 import React, { useContext, useEffect, useState } from "react";
 import { format } from "timeago.js";
+import socket from "../../lib/useSocket";
+import useTokenState from "../../lib/useTokenState";
 import { store } from "../../store";
 
 const useStyles = makeStyles({
@@ -28,6 +30,7 @@ export default function AdminContainer() {
     const { state, dispatch } = useContext(store);
     const [currentMatches, setCurrentMatches] = useState([]);
     const [matchStatus, setMatchStatus] = useState([]);
+    const [userToken] = useTokenState("");
 
     useEffect(() => {
         async function fetchMatches() {
@@ -40,8 +43,20 @@ export default function AdminContainer() {
         fetchMatches();
     }, []);
 
-    const handleDistributeCoins = async () => {
+    const handleDistributeCoins = async (mid) => {
+        if (userToken.length === 0) return console.log("Not logged in");
+        socket.emit("match:distribute", { mid, userToken });
+        socket.once("match:distribute:end", (data) => {
 
+        });
+    }
+
+    const handleMatchStatusChange = async (mid, status) => {
+        if (userToken.length === 0) return console.log("Not logged in");
+        socket.emit("match:status:change", { mid, status, userToken });
+        socket.once("match:status:change:end", (data) => {
+
+        })
     }
 
     return (
