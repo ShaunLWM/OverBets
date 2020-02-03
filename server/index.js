@@ -108,29 +108,6 @@ app.get("/matches/:matchId", (req, res) => {
     return res.status(200).json({ success: true, match: m });
 });
 
-app.post("/matches/:matchId", isAuthenticated, async (req, res) => { // user betting on match
-    // TODO: client side check as well
-    const mid = req.params.matchId;
-    const { coins, uid, side } = req.body;
-    const canBet = await database.checkBet({ uid, mid });
-    if (!canBet) return res.status(403).json({ success: false, msg: "You have already bet on this match." });
-    const match = matches.find((m) => m.match.match_id === mid);
-    if (typeof match === "undefined") return res.status(403).json({ success: false, msg: "Match not found" });
-    if (match.match.match_status !== "MATCH_OPEN") return res.status(403).json({ success: false, msg: "Match is not open for betting" });
-    const matchTime = match.match.match_unix;
-    const currentTime = Math.round(Date.now() / 1000);
-    if ((currentTime + 5 * 60) >= matchTime) {
-        await database.updateMatchStatus(match.match.match_id, 2);
-        return res.status(403).json({ success: false, msg: "Betting is closed for this match." });
-    }
-
-    const betUid = await database.addBet({
-        uid, mid, coins, side,
-    });
-
-    return res.status(200).json({ success: true, betUid });
-});
-
 function emitNewBet({
     matchId, battletag, coins, img, odds, percentage,
 }) {
@@ -200,13 +177,20 @@ io.on("connection", (socket) => {
 
             const matchData = matches.find((match) => match.match.match_id === mid);
             if (typeof matchData === "undefined") return socket.emit("match:bet:new:end", { success: false, msg: "Match doesn't exist" });
+            if (matchData.match.match_status !== "MATCH_OPEN") return socket.emit("match:bet:new:end", { success: false, msg: "Match is not open for betting" });
+
+            const matchTime = matchData.match.match_unix;
+            const currentTime = Math.round(Date.now() / 1000);
+            if ((currentTime + 5 * 60) >= matchTime) {
+                await database.setMatchStatus(match.match.match_id, "MATCH_CLOSED");
+                return socket.emit("match:bet:new:end", { success: false, msg: "Betting is closed for this match." });
+            }
 
             const hasBetted = await database.checkBet({ uid, mid });
             if (hasBetted) return socket.emit("match:bet:new:end", { success: false, msg: "You have already bet for this game" });
 
             const addBet = await database.addBet({ uid, mid, coins, side: teamSide });
             if (!addBet) return socket.emit("match:bet:new:end", { success: false, msg: "Unable to met. Please contact admin." });
-
 
             if (teamSide === 0) matchData.match.teamOne.team_total += betCoins;
             else matchData.match.teamTwo.team_total += betCoins;
