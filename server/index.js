@@ -186,12 +186,16 @@ io.on("connection", (socket) => {
     }) => {
         jwt.verify(token, process.env.JWT_SECRET, async (error, decoded) => {
             if (error) return console.log("Failed to decode token");
-            const { user_id: uid, user_battletag: battletag, user_image } = decoded;
+            const { user_id: uid } = decoded;
             const mid = Number(matchId);
             const teamSide = Number(side);
             const betCoins = Number(coins);
             if (isNaN(mid) || isNaN(teamSide) || isNaN(betCoins)) return socket.emit("match:bet:new:end", { success: false, msg: "Invalid input" });
 
+            const user = await database.getUserById(uid);
+            if (!user) return socket.emit("match:bet:new:end", { success: false, msg: "User not found. Contact admin." });
+            if (user.user_coins < 1 || betCoins > user.user_coins) return socket.emit("match:bet:new:end", { success: false, msg: "Not enough coins" });
+            // TODO: get match from database here?
             const matchData = matches.find((match) => match.match.match_id === mid);
             if (typeof matchData === "undefined") return socket.emit("match:bet:new:end", { success: false, msg: "Match doesn't exist" });
             if (matchData.match.match_status !== "MATCH_OPEN") return socket.emit("match:bet:new:end", { success: false, msg: "Match is not open for betting" });
@@ -206,7 +210,7 @@ io.on("connection", (socket) => {
             const hasBetted = await database.checkBet({ uid, mid });
             if (hasBetted) return socket.emit("match:bet:new:end", { success: false, msg: "You have already bet for this game" });
 
-            const addBet = await database.addBet({ uid, mid, coins, side: teamSide });
+            const addBet = await database.addBet({ uid, mid, coins: betCoins, side: teamSide });
             if (!addBet) return socket.emit("match:bet:new:end", { success: false, msg: "Unable to met. Please contact admin." });
 
             if (teamSide === 0) matchData.match.teamOne.team_total += betCoins;
@@ -228,11 +232,11 @@ io.on("connection", (socket) => {
             if (matchData.users.length > 5) matchData.users.shift();
             matchData.users.push({
                 user_image,
-                bet_amount: coins,
+                bet_amount: betCoins,
                 user_battletag: battletag,
             });
 
-            database.editCoins({ uid, amount: coins });
+            database.editCoins({ uid, amount: betCoins });
             return database.addLogs({ type: 3, admin: 0, data: { msg: "User bet" } });
         });
     });

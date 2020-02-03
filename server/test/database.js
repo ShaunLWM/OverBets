@@ -1,12 +1,40 @@
-const Database = require("../lib/Database");
-
+const database = require("../lib/Database");
+const { getRandomNumber } = require("../lib/Helper");
 (async () => {
-    // await Database.connect();
-    // const matches = await Database.getMatches();
-    // for (const m of matches) {
-    //     console.log('m :', m.match_id);
+    // const players = new Array(100).fill().map(() => {
+    //     return {
+    //         tag: `RandomGuy#${getRandomNumber(1, 9999)}`,
+    //         img: `0x0250000000000AE6`
+    //     }
+    // })
+
+    // console.log(players);
+    // for (const player of players) {
+    //     await database.addUser(player)
     // }
 
-    // console.log(await Database.getSumBets(6));
-    const result = await Database.addBet({ uid: 1, mid: 1, coins: 22, side: 1 });
+    const matches = await database.getMatches();
+    for (let playerId = 8; playerId < 108; playerId++) {
+        for (match of matches) {
+            const uid = playerId;
+            const mid = Number(match.match_id);
+            const teamSide = Number(getRandomNumber(0, 1));
+            const shouldBet = Number(getRandomNumber(0, 1));
+            const betCoins = Number(getRandomNumber(1, 20));
+            if (shouldBet === 0) continue;
+
+            const user = await database.getUserById(uid);
+            if (!user) continue;
+            if (user.user_coins < 1 || betCoins > user.user_coins) continue;
+
+            const hasBetted = await database.checkBet({ uid, mid });
+            if (hasBetted) return console.log("You have already bet for this game");
+
+            const addBet = await database.addBet({ uid, mid, coins: betCoins, side: teamSide });
+            if (!addBet) return console.log("Unable to met. Please contact admin.");
+
+            database.editCoins({ uid, amount: coins });
+            return database.addLogs({ type: 3, admin: 0, data: { msg: "User bet" } });
+        }
+    }
 })();
