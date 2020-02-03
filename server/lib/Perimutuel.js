@@ -7,8 +7,8 @@ module.exports = {
 		);
 		const poolLeft = poolTotal * (1 - houseCommission / 100);
 		const commission = poolTotal * (houseCommission / 100);
-		let payoutRatio = [Math.floor((1000 * (poolLeft / pool[winIndex])) / 1000).toFixed(2)];
-		if (calAllPayout) payoutRatio = pool.map((p) => Math.floor((1000 * (poolLeft / p)) / 1000).toFixed(2));
+		let payoutRatio = [((1000 * (poolLeft / pool[winIndex])) / 1000).toFixed(2)];
+		if (calAllPayout) payoutRatio = pool.map((p) => ((1000 * (poolLeft / p)) / 1000).toFixed(2));
 		return {
 			commission,
 			poolTotal,

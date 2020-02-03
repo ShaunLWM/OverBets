@@ -30,6 +30,7 @@ export default function AdminContainer() {
     const { state, dispatch } = useContext(store);
     const [currentMatches, setCurrentMatches] = useState([]);
     const [matchStatus, setMatchStatus] = useState([]);
+    const [matchWinner, setMatchWinner] = useState([]);
     const [userToken] = useTokenState("");
 
     useEffect(() => {
@@ -37,10 +38,11 @@ export default function AdminContainer() {
             const matches = await fetch("http://localhost:3001/matches");
             const data = await matches.json();
             setMatchStatus(data.map(m => m.match.match_status));
+            setMatchWinner(data.map(m => m.match.match_result));
             setCurrentMatches(data);
         }
 
-        fetchMatches();
+        if (matchStatus.length < 1) fetchMatches();
     }, []);
 
     const handleDistributeCoins = async (mid) => {
@@ -53,6 +55,7 @@ export default function AdminContainer() {
     }
 
     const handleMatchStatusChange = async (mid, status) => {
+        console.log(userToken);
         if (userToken.length === 0) return console.log("Not logged in");
         socket.emit("match:status:change", { matchId: mid, status, token: userToken });
         socket.once("match:status:change:end", (data) => {
@@ -88,11 +91,10 @@ export default function AdminContainer() {
                                     <FormControl className={classes.formControl}>
                                         <InputLabel id="demo-simple-select-label">Status</InputLabel>
                                         <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
+                                            labelId="select-match-status-label"
+                                            id="select-match-status"
                                             value={matchStatus[i]}
                                             onChange={(e) => {
-                                                console.log(`new value ${e.target.value}`);
                                                 let arr = [...matchStatus];
                                                 arr[i] = e.target.value;
                                                 setMatchStatus(arr);
@@ -103,9 +105,29 @@ export default function AdminContainer() {
                                             <MenuItem value={"MATCH_CLOSED"}>MATCH_CLOSED</MenuItem>
                                             <MenuItem value={"MATCH_ENDED"}>MATCH_ENDED</MenuItem>
                                             <MenuItem value={"MATCH_RETURNED"}>MATCH_RETURNED</MenuItem>
+                                            <MenuItem value={"MATCH_POSTPONED"}>MATCH_POSTPONED</MenuItem>
                                         </Select>
                                     </FormControl>
-                                    <Button size="small" variant="contained" disabled={matchStatus[i] !== "MATCH_ENDED"} onClick={handleDistributeCoins}>Default</Button>
+                                    <Button size="small" variant="contained" onClick={() => handleMatchStatusChange(row.match.match_id, matchStatus[i])}>Update Status</Button>
+                                    <br></br>
+                                    <FormControl className={classes.formControl}>
+                                        <InputLabel id="demo-simple-select-label">Winner</InputLabel>
+                                        <Select
+                                            labelId="select-match-winner-label"
+                                            id="select-match-winner"
+                                            value={matchWinner[i]}
+                                            onChange={(e) => {
+                                                let arr = [...matchWinner[i]];
+                                                arr[i] = e.target.value;
+                                                setMatchWinner(arr);
+                                            }}
+                                        >
+                                            <MenuItem value={0}>Left Team</MenuItem>
+                                            <MenuItem value={1}>Right Team</MenuItem>
+                                            <MenuItem value={2}>Not decided</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                    <Button size="small" variant="contained" disabled={matchStatus[i] !== "MATCH_ENDED"} onClick={handleDistributeCoins}>Submit</Button>
                                 </TableCell>
                             </TableRow>
                         ))}

@@ -221,30 +221,30 @@ io.on("connection", (socket) => {
     });
 });
 
-setInterval(() => {
-    if (matches.length < 1) return;
-    const randomMatch = getRandomNumber(0, matches.length - 1);
-    const { match: { match_id: mid } } = matches[randomMatch];
-    const battletag = `RandomGuy#${getRandomNumber(1, 9999)}`;
-    const coins = getRandomNumber(1, 100);
-    const img = getRandomAvatar();
-    const randomSides = getRandomNumber(0, 1);
-    if (randomSides === 0) matches[randomMatch].match.teamOne.team_total += coins;
-    else matches[randomMatch].match.teamTwo.team_total += coins;
+// setInterval(() => {
+//     if (matches.length < 1) return;
+//     const randomMatch = getRandomNumber(0, matches.length - 1);
+//     const { match: { match_id: mid } } = matches[randomMatch];
+//     const battletag = `RandomGuy#${getRandomNumber(1, 9999)}`;
+//     const coins = getRandomNumber(1, 100);
+//     const img = getRandomAvatar();
+//     const randomSides = getRandomNumber(0, 1);
+//     if (randomSides === 0) matches[randomMatch].match.teamOne.team_total += coins;
+//     else matches[randomMatch].match.teamTwo.team_total += coins;
 
-    const leftTeamTotal = matches[randomMatch].match.teamOne.team_total;
-    const rightTeamTotal = matches[randomMatch].match.teamTwo.team_total;
-    const teamOdds = calculateOdds([leftTeamTotal, rightTeamTotal], 0, true);
-    const matchPercentage = Math.round((leftTeamTotal / (leftTeamTotal + rightTeamTotal)) * 100);
-    emitNewBet({
-        battletag,
-        coins,
-        img,
-        matchId: mid,
-        odds: [teamOdds.payoutRatio[0], teamOdds.payoutRatio[1]],
-        percentage: matchPercentage,
-    });
-}, 1500);
+//     const leftTeamTotal = matches[randomMatch].match.teamOne.team_total;
+//     const rightTeamTotal = matches[randomMatch].match.teamTwo.team_total;
+//     const teamOdds = calculateOdds([leftTeamTotal, rightTeamTotal], 0, true);
+//     const matchPercentage = Math.round((leftTeamTotal / (leftTeamTotal + rightTeamTotal)) * 100);
+//     emitNewBet({
+//         battletag,
+//         coins,
+//         img,
+//         matchId: mid,
+//         odds: [teamOdds.payoutRatio[0], teamOdds.payoutRatio[1]],
+//         percentage: matchPercentage,
+//     });
+// }, 1500);
 
 server.listen(process.env.SERVER_PORT, async () => {
     console.log(`[#] overbets listening on port ${process.env.SERVER_PORT}!`);
