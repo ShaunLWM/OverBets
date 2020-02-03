@@ -89,6 +89,23 @@ class Database {
         return rows.length === 0 ? false : rows[0];
     }
 
+    async getAvatarUrl(key) {
+        await this.checkConnect();
+        const [rows] = await this.connection.query("SELECT avatar_img FROM avatar WHERE avatar_key = ?", [key]);
+        return rows.length === 0 ? false : rows[0];
+    }
+
+    async updateUserAvatar(uid, avatar) {
+        await this.checkConnect();
+        await this.connection.execute("UPDATE user SET user_image = ? WHERE user_id = ?", [avatar, uid]);
+    }
+
+    async getAvatars() {
+        await this.checkConnect();
+        const [rows] = await this.connection.query("SELECT avatar_img FROM avatar");
+        return rows;
+    }
+
     async addUser({ tag, img }) {
         await this.checkConnect();
         await this.connection.execute("INSERT INTO `user` (`user_id`, `user_battletag`, `user_dateregistered`, `user_coins`, `user_image`) VALUES (NULL, ?, NOW(), '100', ?);", [tag, img]);

@@ -23,7 +23,8 @@ passport.use(new BnetStrategy({
 }, async (accessToken, refreshToken, profile, done) => {
     let user = await database.getUserByTag(profile.battletag);
     if (!user) {
-        const img = await getBattleImg(profile.battletag).portrait || "0x02500000000002F9";
+        const avatar = await getBattleImg(profile.battletag).portrait || "0x02500000000002F9";
+        const img = await database.getAvatarUrl(avatar);
         await database.addUser({ tag: profile.battletag, img });
         user = await database.getUserByTag(profile.battletag);
     }

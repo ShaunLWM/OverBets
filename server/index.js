@@ -20,7 +20,7 @@ const { getRandomNumber, getRandomAvatar } = require("./lib/Helper");
 const { calculateOdds } = require("./lib/Perimutuel");
 
 app.use(cors({
-    origin: ["http://localhost:3001", "http://localhost:3000"], // allow to server to accept request from different origin
+    origin: ["http://localhost:3000", "http://localhost:5000"], // allow to server to accept request from different origin
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true, // allow session cookie from browser to pass through
 }));
