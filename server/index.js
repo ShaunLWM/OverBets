@@ -58,7 +58,7 @@ async function populateMatches() {
         const leftTeamTotal = await database.getSumBets(match.match_id, 0);
         const rightTeamTotal = await database.getSumBets(match.match_id, 1);
         const teamOdds = calculateOdds([leftTeamTotal, rightTeamTotal], 0, true);
-        const users = (await database.getBets(match.match_id)).reverse().map((u) => ({
+        const users = (await database.getBets(match.match_id, 6)).reverse().map((u) => ({
             bet_amount: u.bet_amount,
             user_image: u.user_image,
             user_battletag: u.user_battletag,
@@ -89,7 +89,7 @@ async function populateMatches() {
 
 app.get("/profile", isAuthenticated, async (req, res) => {
     const { uid } = req.user;
-    const profile = await database.getProfile(uid);
+    const profile = await database.getUserById(uid);
     return res.status(200).json({ success: true, profile });
 });
 
@@ -149,6 +149,43 @@ function emitNewBet({
 
 io.on("connection", (socket) => {
     console.log(`[+] socket connected: ${socket.id}`);
+
+    socket.on("match:distribute", ({ matchId, token, winnerSide }) => {
+        jwt.verify(token, process.env.JWT_SECRET, async (error, decoded) => {
+            if (error) return console.log("Failed to decode token");
+            const { user_id: uid } = decoded;
+            const user = await database.getUserById(uid);
+            if (!user || user.user_rank !== 0) return;
+            // TODO: Do some banning here
+            const mid = Number(matchId);
+            const match = await database.getMatch(mid);
+            if (!match) return; // just to check match exist
+            const bets = await database.getBets(mid, 0);
+            const winnerGroup = bets.map(bet => bet.bet_side === winnerSide);
+            const loserSide = winnerSide === 0 ? 1 : 0;
+            const loserGroup = bets.map(bet => bet.bet_side === loserSide);
+            console.log(winnerGroup);
+            console.log(loserGroup);
+            const winnerTotal = winnerGroup.reduce((acc, cur) => acc + cur.bet_amount);
+            const loserTotal = loserGroup.reduce((acc, cur) => acc + cur.bet_amount);
+            const teamOdds = (calculateOdds([winnerTotal, loserTotal], 0))[0];
+            console.log(`Odds: ${teamOdds}`);
+            if (isNaN(teamOdds) || teamOdds === Infinity) return console.log("[!] something wrong allocating teamodds");
+            for (let i = 0; i < winnerGroup.length; i++) {
+                const userId = winnerGroup[i].bet_userId;
+                const amount = Math.floor(winnerGroup[i].bet_amount * teamOdds);
+                if (isNaN(newAmount) || newAmount === Infinity) return;
+                console.log(`[@] user ${userId} receiving ${amount} for this ${winnerGroup[i].bet_amount}/${teamOdds}x bet.`);
+                await database.editCoins({ uid: userId, amount, add: true });
+                await database.addTransaction({ type: "MATCH_REWARD", amount, data: mid });
+            }
+
+            await database.setMatchStatus(mid, "MATCH_ENDED");
+            const matchIndex = matches.findIndex((m) => m.match.match_id === mid);
+            matches[matchIndex].match.match_status = "MATCH_ENDED";
+            socket.emit("match:distribute:end");
+        });
+    })
 
     socket.on("match:bet:new", ({
         coins, token, side, matchId,

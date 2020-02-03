@@ -6,7 +6,7 @@ const isAuthenticated = require("../lib/isAuthenticated");
 
 router.get("/login/success", async (req, res) => {
     if (!req.user) return res.redirect(`http://localhost:3000/login/failed`);
-    const user = await database.getUser(req.user.user_battletag);
+    const user = await database.getUserByTag(req.user.user_battletag);
     const token = await jwt.sign({ ...user }, process.env.JWT_SECRET, { expiresIn: 36000 });
     return res.redirect(`http://localhost:3000/login/token/${token}`);
 });

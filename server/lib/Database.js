@@ -22,15 +22,25 @@ class Database {
         return rows;
     }
 
-    async updateMatchStatus(mid, status = null) {
+    async getMatch(mid) {
+        await this.checkConnect();
+        const [rows] = await this.connection.query("SELECT * FROM matches WHERE match_id = ?", [mid]);
+        return rows.length > 0 ? rows[0] : false;
+    }
+
+    async setMatchStatus(mid, status = null) {
         if (status === null) return;
         await this.checkConnect();
         await this.connection.execute("UPDATE matches SET match_status = ? WHERE match_id = ?", [status, mid]);
     }
 
-    async getBets(matchId, count = 6) {
+    async getBets(matchId, count = 0) {
         await this.checkConnect();
-        const [rows] = await this.connection.query("SELECT * FROM bet b LEFT JOIN user u ON b.bet_userId = u.user_id WHERE b.bet_matchId = ? ORDER BY b.bet_id DESC LIMIT ?", [matchId, count]);
+        let rows = [];
+        if (count === 0)
+            [rows] = await this.connection.query("SELECT * FROM bet b LEFT JOIN user u ON b.bet_userId = u.user_id WHERE b.bet_matchId = ? ORDER BY b.bet_id DESC", [matchId]);
+        else
+            [rows] = await this.connection.query("SELECT * FROM bet b LEFT JOIN user u ON b.bet_userId = u.user_id WHERE b.bet_matchId = ? ORDER BY b.bet_id DESC LIMIT ?", [matchId, count]);
         return rows;
     }
 
@@ -67,11 +77,16 @@ class Database {
         return rows.affectedRows === 1;
     }
 
-    async getUser(tag) {
+    async getUserByTag(tag) {
         await this.checkConnect();
         const [rows] = await this.connection.query("SELECT * FROM user WHERE user_battletag = ?", [tag]);
-        if (rows.length === 0) return false;
-        return rows[0];
+        return rows.length === 0 ? false : rows[0];
+    }
+
+    async getUserById(id) {
+        await this.checkConnect();
+        const [rows] = await this.connection.query("SELECT * FROM user WHERE user_id = ?", [id]);
+        return rows.length === 0 ? false : rows[0];
     }
 
     async addUser({ tag, img }) {
@@ -86,12 +101,6 @@ class Database {
         return rows;
     }
 
-    async getProfile(id) {
-        await this.checkConnect();
-        const [rows] = await this.connection.query("SELECT * FROM user WHERE user_id = ?", [id]);
-        return rows.length === 0 ? false : rows[0];
-    }
-
     async editCoins({ uid, amount = 0, add = false }) {
         await this.checkConnect();
         this.connection.execute(`UPDATE user SET user_coins = user_coins ${add ? `+` : `-`} ? WHERE user_id = ?`, [Number(amount), uid])
@@ -100,6 +109,11 @@ class Database {
     async addLogs({ type, admin = 1, data }) {
         await this.checkConnect();
         this.connection.execute("INSERT INTO `logs` (`history_type`, `history_admin`, `history_data`) VALUES (?, ?, ?);", [type, admin, data]);
+    }
+
+    async addTransaction({ type, amount, data, comment = "" }) {
+        await this.checkConnect();
+        await this.connection.execute("INSERT INTO `transaction` (`transaction_id`, `transaction_datetime`, `transaction_type`, `transaction_amount`, `transaction_data`, `transaction_comment`) VALUES (NULL, NOW(), ?, ?, ?, ?);", [type, amount, data, comment])
     }
 }
 

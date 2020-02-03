@@ -45,7 +45,8 @@ export default function AdminContainer() {
 
     const handleDistributeCoins = async (mid) => {
         if (userToken.length === 0) return console.log("Not logged in");
-        socket.emit("match:distribute", { mid, userToken });
+        // TODO: match:distribute winnerSide
+        socket.emit("match:distribute", { matchId: mid, token: userToken });
         socket.once("match:distribute:end", (data) => {
 
         });
@@ -53,7 +54,7 @@ export default function AdminContainer() {
 
     const handleMatchStatusChange = async (mid, status) => {
         if (userToken.length === 0) return console.log("Not logged in");
-        socket.emit("match:status:change", { mid, status, userToken });
+        socket.emit("match:status:change", { matchId: mid, status, token: userToken });
         socket.once("match:status:change:end", (data) => {
 
         })
