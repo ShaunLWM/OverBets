@@ -164,6 +164,23 @@ io.on("connection", (socket) => {
         });
     })
 
+    socket.on("match:status:change", ({ matchId, status, token }) => {
+        jwt.verify(token, process.env.JWT_SECRET, async (error, decoded) => {
+            if (error) return console.log("[match:status:change] Failed to decode token");
+            const { user_id: uid } = decoded;
+            const user = await database.getUserById(uid);
+            console.log(user)
+            if (!user || user.user_rank !== 0) return console.log("[match:status:change] user is not admin.");
+            // TODO: Do some banning here
+            const mid = Number(matchId);
+            const match = await database.getMatch(mid);
+            if (!match) return console.log("[match:status:change] match not found"); // just to check match exist
+            if (match.match_status === status) return console.log("[match:status:change] same status");
+            await database.setMatchStatus(mid, status);
+            return socket.emit("match:status:change:end", { success: true });
+        });
+    })
+
     socket.on("match:bet:new", ({
         coins, token, side, matchId,
     }) => {

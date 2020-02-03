@@ -58,9 +58,7 @@ export default function AdminContainer() {
         console.log(userToken);
         if (userToken.length === 0) return console.log("Not logged in");
         socket.emit("match:status:change", { matchId: mid, status, token: userToken });
-        socket.once("match:status:change:end", (data) => {
-
-        })
+        socket.once("match:status:change:end", ({ success }) => console.log(success));
     }
 
     return (
