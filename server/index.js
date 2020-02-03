@@ -162,7 +162,7 @@ io.on("connection", (socket) => {
             matches[matchIndex].match.match_status = "MATCH_ENDED";
             socket.emit("match:distribute:end");
         });
-    })
+    });
 
     socket.on("match:status:change", ({ matchId, status, token }) => {
         jwt.verify(token, process.env.JWT_SECRET, async (error, decoded) => {

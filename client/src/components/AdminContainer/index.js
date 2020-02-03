@@ -45,17 +45,16 @@ export default function AdminContainer() {
         if (matchStatus.length < 1) fetchMatches();
     }, []);
 
-    const handleDistributeCoins = async (mid) => {
+    const handleDistributeCoins = async (mid, winner) => {
         if (userToken.length === 0) return console.log("Not logged in");
         // TODO: match:distribute winnerSide
-        socket.emit("match:distribute", { matchId: mid, token: userToken });
+        socket.emit("match:distribute", { matchId: mid, token: userToken, winnerSide: winner });
         socket.once("match:distribute:end", (data) => {
 
         });
     }
 
     const handleMatchStatusChange = async (mid, status) => {
-        console.log(userToken);
         if (userToken.length === 0) return console.log("Not logged in");
         socket.emit("match:status:change", { matchId: mid, status, token: userToken });
         socket.once("match:status:change:end", ({ success }) => console.log(success));
@@ -125,7 +124,7 @@ export default function AdminContainer() {
                                             <MenuItem value={2}>Not decided</MenuItem>
                                         </Select>
                                     </FormControl>
-                                    <Button size="small" variant="contained" disabled={matchStatus[i] !== "MATCH_ENDED"} onClick={handleDistributeCoins}>Submit</Button>
+                                    <Button size="small" variant="contained" disabled={matchStatus[i] !== "MATCH_ENDED"} onClick={() => handleDistributeCoins(row.match.match_id, matchWinner[i])}>Submit</Button>
                                 </TableCell>
                             </TableRow>
                         ))}
