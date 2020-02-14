@@ -26,6 +26,11 @@ module.exports = {
     "quotes": 0,
     "indent": 0,
     "no-tabs": 0,
-    "object-curly-newline": { "consistent": true }
+    "object-curly-newline": 1
+  },
+  settings: {
+    react: {
+      version: require('./package.json').dependencies.react,
+    },
   },
 };
