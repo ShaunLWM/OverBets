@@ -3,13 +3,13 @@ import React, { createContext } from "react";
 import { useImmerReducer } from "use-immer";
 
 const initialState = {
-    user: {},
-    /*
+	user: {},
+	/*
         user_battletag: str,
         user_token: str
     */
-    matches: [],
-    /*
+	matches: []
+	/*
         {
             match_id: int <- this is our internal database id, not owl id
             match_datetime: int,
@@ -35,49 +35,49 @@ const store = createContext(initialState);
 const { Provider } = store;
 
 function reducerFunction(draft, action) {
-    switch (action.type) {
-        case "setUser":
-            draft["user"] = action["data"];
-            break;
-        case "setMatches":
-            draft["matches"] = action["data"];
-            break;
-        case "setMatch":
-            const m = action["data"];
-            const mid = draft["matches"].findIndex(match => match.match_id === m.match_id);
-            if (mid < 0) draft["matches"].push(action["data"]);
-            draft["matches"][mid] = action["data"];
-            break;
-        case "newBets":
-            const { match_id, user } = action["data"];
-            const matchIndex = draft["matches"].findIndex(match => match.match.match_id === match_id);
-            if (matchIndex < 0) return;
-            const users = draft["matches"][matchIndex]["users"];
-            if (users.length > 5) users.shift();
-            users.push(user);
-            draft["matches"][matchIndex]["match"]["match_percentage"] = action["data"]["payout"]["percentage"];
-            draft["matches"][matchIndex]["match"]["teamOne"]["team_odds"] = action["data"]["payout"]["odds"][0];
-            draft["matches"][matchIndex]["match"]["teamTwo"]["team_odds"] = action["data"]["payout"]["odds"][1];
-            if (action["data"]["user"]["user_battletag"] === draft["user"]["user_battletag"])
-                draft["user"]["user_coins"] -= action["data"]["user"]["bet_amount"];
-            break;
-        case "setProfile":
-            draft["user"] = action["data"]["profile"];
-            break;
-        default:
-            draft = initialState;
-    }
+	switch (action.type) {
+		case "setUser":
+			draft["user"] = action["data"];
+			break;
+		case "setMatches":
+			draft["matches"] = action["data"];
+			break;
+		case "setMatch":
+			const m = action["data"];
+			const mid = draft["matches"].findIndex(match => match.match_id === m.match_id);
+			if (mid < 0) draft["matches"].push(action["data"]);
+			draft["matches"][mid] = action["data"];
+			break;
+		case "newBets":
+			const { match_id, user } = action["data"];
+			const matchIndex = draft["matches"].findIndex(match => match.match.match_id === match_id);
+			if (matchIndex < 0) return;
+			const users = draft["matches"][matchIndex]["users"];
+			if (users.length > 5) users.shift();
+			users.push(user);
+			draft["matches"][matchIndex]["match"]["match_percentage"] = action["data"]["payout"]["percentage"];
+			draft["matches"][matchIndex]["match"]["teamOne"]["team_odds"] = action["data"]["payout"]["odds"][0];
+			draft["matches"][matchIndex]["match"]["teamTwo"]["team_odds"] = action["data"]["payout"]["odds"][1];
+			if (action["data"]["user"]["user_battletag"] === draft["user"]["user_battletag"])
+				draft["user"]["user_coins"] -= action["data"]["user"]["bet_amount"];
+			break;
+		case "setProfile":
+			draft["user"] = action["data"]["profile"];
+			break;
+		default:
+			draft = initialState;
+	}
 }
 
 const StateProvider = ({ children }) => {
-    const [state, dispatch] = useImmerReducer(reducerFunction, initialState);
-    return <Provider value={{ state, dispatch }}>{children}</Provider>;
+	const [state, dispatch] = useImmerReducer(reducerFunction, initialState);
+	return <Provider value={{ state, dispatch }}>{children}</Provider>;
 };
 
-const BASE_URL = "http://localhost:3001";
+const BASE_URL = "http://localhost:3003";
 
 export { store, StateProvider, BASE_URL };
 
 StateProvider.propTypes = {
-    children: PropTypes.element,
+	children: PropTypes.element
 };

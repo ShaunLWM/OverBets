@@ -35,7 +35,7 @@ export default function AdminContainer() {
 
     useEffect(() => {
         async function fetchMatches() {
-            const matches = await fetch("http://localhost:3001/matches");
+            const matches = await fetch("http://localhost:3003/matches");
             const data = await matches.json();
             setMatchStatus(data.map(m => m.match.match_status));
             setMatchWinner(data.map(m => m.match.match_result));
