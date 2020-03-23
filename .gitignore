@@ -102,8 +102,8 @@ dist
 
 # TernJS port file
 .tern-port
-server/public/img/teams
-#server/public/img/players
+#server/public/img/teams
+server/public/img/players
 .env
 server/scraper/avatar.json
 server/schedule.json
